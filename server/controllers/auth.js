@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken"
 import User from "../models/User.js"
 import otpGenerator from 'otp-generator';
 import nodemailer from 'nodemailer';
+import ConnectRequest from "../models/ConnectRequest.js";
+
 
 const transporter = nodemailer.createTransport({
   // Configure your email provider settings here
@@ -99,7 +101,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({ email: email, blockStatus:false });
       if (!user) return res.status(400).json({ msg: "User does not exist. " });
   
       const isMatch = await bcrypt.compare(password, user.password);
@@ -112,6 +114,36 @@ export const login = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+export   const googleLogin = async (req, res) => {
+    try {
+      console.log("googleLogin");
+      const { email } = req.body;
+      console.log(email, "req body email");
+    ;
+      const user = await User.findOne({ email: email, blockStatus:false });
+      // if (!user) return res.status(400).json({ msg: "User does not exist. " });
+      // console.log(user, "----user----------");
+      if (user) {
+        console.log("inside user");
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
+        return res.json({
+          message: "Google Login",
+          token,
+          user
+        });
+      } else {
+        return res.json({ message: "Invalid User", email: email });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  
+
+ 
 
 
  
