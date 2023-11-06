@@ -1,5 +1,5 @@
 import express from 'express';
-import {adminLogin,getUsersList,getEmployerList,blockUser,unblockUser,blockUserEmp,unblockEmp,approveEmp,getUserDetails, getUserPost, blockPost} from '../controllers/adminCtrl.js'
+import {adminLogin,getUsersList,getEmployerList,blockUser,unblockUser,blockUserEmp,unblockEmp,approveEmp,getUserDetails, getUserPost, blockPost,appliedJobs,blockedEmployee,blockedPost} from '../controllers/adminCtrl.js'
 
 const router = express.Router();
  
@@ -13,6 +13,9 @@ router.put("/unblockEmp/:id",unblockEmp)
 router.put("/approve/:id",approveEmp)
 router.post("/usersdetails",getUserDetails)
 router.post("/userspost",getUserPost)
+router.get("/appliedJobs",appliedJobs)
+router.get("/blockedUser",blockedEmployee)
+router.get("/blockedPost",blockedPost)
 
 
 

@@ -142,3 +142,32 @@ export const unblockEmp=async(req,res)=>{
       res.status(404).json({ message: err.message });
     }
   };
+
+  export const appliedJobs = async (req, res) => {
+    try {
+  
+      const appliedJobs = await JobModel.find();
+      res.status(200).json(appliedJobs);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  
+  }
+  
+  export const blockedEmployee = async (req, res) => {
+    try {
+      const blockedEmployee = await User.find({ blockStatus: true });
+      res.status(200).json(blockedEmployee);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
+  
+  export const blockedPost= async (req, res) => {
+    try {
+      const blockedPost = await Post.find({ isBlocked: true });
+      res.status(200).json(blockedPost);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
