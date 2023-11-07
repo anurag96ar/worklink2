@@ -4,14 +4,16 @@ import { registerfunction } from "../../services/Apis";
 import { useNavigate } from "react-router-dom";
 import "../../styles/mix.css";
 import Headers from "../../components/Headers";
-
+import { useParams } from "react-router-dom";
 const Register = () => {
+  const { name } = useParams();
+  console.log(name,"emailll");
   const [passhow, setPassShow] = useState(false);
 
   const [inputdata, setInputdata] = useState({
     firstName: "",
     lastName: "",
-    email: "",
+    email: name=="newuser"?"":name,
     password: "",
     location: "",
     recentJob: "",
@@ -128,7 +130,8 @@ const Register = () => {
               <label htmlFor="email">Email</label>
               <input
                 type="email"
-                name="email"
+                name="email"               
+                value={inputdata.email}
                 id=""
                 onChange={handleChange}
                 placeholder="Enter Your Email Address"

@@ -1,38 +1,187 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
 import Container from 'react-bootstrap/Container';
-import { FaUser, FaBuilding, FaBriefcase, FaSignOutAlt } from 'react-icons/fa';
-import Headers from '../../components/Headers';
-import  "../../styles/mix.css"
+
+import AdminHeaders from '../../components/AdminHeader';
+import "../../styles/mix.css"
+import Card from 'react-bootstrap/Card';
+import { Box } from '@mui/material';
+import { useDispatch, useSelector } from "react-redux";
+import { Chart } from "react-google-charts";
+
 
 function AdminHome() {
+  const [totalUser, setTotalUser] = useState(0);
+  const [totalJob, setTotalJob] = useState(0);
+  const [totalAppliedJob, setTotalAppliedJob] = useState(0);
+  const [totalBlockedUser, setBlockedUser] = useState(0);
+  const [totalBlockedPost, setBlockedPost] = useState(0);
+  const token = useSelector((state) => state.token);
+
+
+
+  const data = [
+    ["Task", "Hours per Day"],
+    ["Employee", totalUser],
+    ["Blocked User", totalBlockedUser],
+    ["Total Jobs", totalJob],
+    ["Applied Jobs", totalAppliedJob],
+
+    ["BlockedPosts", totalBlockedPost]
+  ];
+
+  const options = {
+    title: "Job Portal ",
+  };
+
+
+
+  useEffect(() => {
+
+
+    axios
+      .get("http://localhost:3001/admin/userslist")
+      .then((response) => {
+        // Check if the response data is an array before setting the state
+        console.log(response.data);
+
+        setTotalUser(response.data.length);
+
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });////
+
+    axios
+      .get("http://localhost:3001/admin/blockedPost")
+      .then((response) => {
+        // Check if the response data is an array before setting the state
+        console.log(response.data);
+
+        setBlockedPost(response.data.length);
+
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    ///////
+    axios
+      .get("http://localhost:3001/admin/appliedJobs")
+      .then((response) => {
+        // Check if the response data is an array before setting the state
+        console.log(response.data);
+
+        setTotalAppliedJob(response.data.length);
+
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    /////
+
+    axios
+      .get("http://localhost:3001/admin/blockedUser")
+      .then((response) => {
+        // Check if the response data is an array before setting the state
+        console.log(response.data);
+
+        setBlockedUser(response.data.length);
+
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+
+    ////////////
+    axios
+      .post("http://localhost:3001/users/joblist", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        // Check if the response data is an array before setting the state
+        // console.log(response.data);
+
+        setTotalJob(response.data.length);
+
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+
+  }, []);
+
   return (
-    <>
-    <Headers/>
-    <Navbar bg="dark" variant="dark" expand="lg" className="sidebar">
-      <Container fluid>
-        <Navbar.Toggle aria-controls="sidebar-nav" />
-        <Navbar.Collapse id="sidebar-nav">
-          <Nav className="flex-column">
-            <Link to="/admin/userlist" className="nav-link">
-              <FaUser className="icon" /> Users
-            </Link>
-            <Link to="/admin/emplist" className="nav-link">
-              <FaBuilding className="icon" /> Employer
-            </Link>
-            <Link to="/jobs" className="nav-link">
-              <FaBriefcase className="icon" /> Jobs
-            </Link>
-            <button className="nav-link logout-button">
-              <FaSignOutAlt className="icon" /> Logout
-            </button>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    </>
+    <div className="dashboard">
+      <AdminHeaders />
+
+      <Box display="flex" padding="10px">
+        <Container>
+          <div className="rounded-card-container">
+            <Card className="rounded-card">
+              <Card.Body>
+                <Card.Title>Total Employee</Card.Title>
+                <Card.Text>
+                  {totalUser}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+        </Container>
+        <Container>
+          <div className="rounded-card-container">
+            <Card className="rounded-card">
+              <Card.Body>
+                <Card.Title>Blocked Employee</Card.Title>
+                <Card.Text>
+                  {totalBlockedUser}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+        </Container>
+        <Container>
+          <div className="rounded-card-container">
+            <Card className="rounded-card">
+              <Card.Body>
+                <Card.Title>Jobs Applied</Card.Title>
+                <Card.Text>
+                  {totalAppliedJob}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+        </Container>
+        <Container>
+          <div className="rounded-card-container">
+            <Card className="rounded-card">
+              <Card.Body>
+                <Card.Title>Total Jobs Created</Card.Title>
+                <Card.Text>
+                  {totalJob}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+        </Container>
+
+      </Box>
+      <Chart
+        chartType="PieChart"
+        data={data}
+        options={options}
+        width={"100%"}
+        height={"500px"}
+      />
+
+    </div>
+
   );
 }
 

@@ -59,7 +59,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/googlesignupform" element={<GoogleSignUp />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/register/:name" element={<Register />} />
             <Route
               path="/feeds"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}

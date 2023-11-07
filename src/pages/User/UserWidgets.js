@@ -12,6 +12,7 @@ import {
   import { useEffect, useState } from "react";
   import { useNavigate } from "react-router-dom";
   import axios from 'axios';
+  import instance from "../../services/axiosInterceptor";
   
   const UserWidget = ({ userId, picturePath }) => {
     const [user, setUser] = useState(null);
@@ -21,17 +22,22 @@ import {
     const dark = palette.neutral.dark;
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
+
   
     const getUser = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/users/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await instance.get(`/users/${userId}`);
+          // const response = await axios.get(`http://localhost:3001/users/${userId}`, {
+          //   headers: { Authorization: `Bearer ${token}` },
+          // });
+          console.log(response,"axios response");
           setUser(response.data);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
       };
+
+      
   
     useEffect(() => {
       getUser();

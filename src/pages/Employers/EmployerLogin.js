@@ -41,7 +41,7 @@ function EmployerLogin() {
       const data = await response.json();
       dispatch(
         setLogin({
-          user: data.user,
+          user: data.emp,//[change]
           token: data.token,
         })
       );

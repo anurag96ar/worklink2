@@ -8,6 +8,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
+
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,31 +29,33 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Simulate a login request, replace with actual API call
-    // ...
-
-    // Assuming you receive a response containing user and token data
-    const response = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.status === 200) {
-      const data = await response.json();
-      dispatch(
-        setLogin({
-          user: data.user,
-          token: data.token,
-        })
-      );
-      navigate("/feeds");
-    } else {
-      // Handle login error here
-      toast.error("Please Contact Administrator");
+  
+    try {
+      const response = await axios.post("http://localhost:3001/auth/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (response.status === 200) {
+        const data = response.data;
+        dispatch(
+          setLogin({
+            user: data.user,
+            token: data.token,
+          })
+        );
+        navigate("/feeds");
+      } else {
+        // Handle login error here
+        toast.error("Please Contact Administrator");
+      }
+    } catch (error) {
+      // Handle request error
+      console.error("Request error:", error);
     }
   };
+  
 
   const handleGoogleLogin = async (credentialResponseDecoded) => {
     console.log("inside handle google login");
@@ -77,7 +80,7 @@ function Login() {
     } else {
       if (response.data.message === "Invalid User") {
         console.log(response.data.email, "response email");
-        navigate(`/googlesignupform/${response.data.email}`);
+        navigate(`/register/${response.data.email}`);
         toast("User is not Registered, So Please SignUp");
       }
     }
@@ -160,7 +163,7 @@ function Login() {
               {/* Register link */}
               <p>
                 Don't have an account?{" "}
-                <a href="/register" className="link-info">
+                <a href="/register/newuser" className="link-info">
                   Register here
                 </a>
               </p>

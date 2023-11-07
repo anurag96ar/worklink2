@@ -5,17 +5,25 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch, useSelector } from "react-redux";
 function EmpJobListing() {
   const [jobData, setJobData] = useState([]);
   const navigate = useNavigate();
   const [userMail, setUserMail] = useState("");
-
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     const userEmail = localStorage.getItem("email");
     setUserMail(userEmail);
+    const formData = new FormData();
+    formData.append("email", user.email);
+    console.log(user.email, "email");
     axios
-      .get("http://localhost:3001/employer/joblist")
-      .then((response) => {
+      .post("http://localhost:3001/employer/joblist", formData, {
+        headers: {
+
+          "Content-Type": "application/json",
+        },
+      }).then((response) => {
         // Check if the response data is an array before setting the state
         if (Array.isArray(response.data)) {
           setJobData(response.data);

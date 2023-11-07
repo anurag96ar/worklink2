@@ -1,3 +1,4 @@
+//change
 import { useState } from "react";
 import {
   Box,
@@ -94,15 +95,10 @@ const EmpNavbar = () => {
         <FlexBetween gap="2rem">
            <Work onClick={() => navigate("/empJobsList")} sx={{ fontSize: "25px", color:"white", cursor: "pointer", }} />
 
-          <Message  sx={{ fontSize: "25px", color:"white" }} />
-
          
-          
-          <Notifications sx={{ fontSize: "25px", color:"white" }} />
-         
-          <FormControl variant="standard" >
+          <FormControl variant="standard" value={user.companyName} >
             <Select
-              
+                value={user.companyName}
               sx={{
                 backgroundColor: neutralLight,
                 width: "150px",
@@ -118,9 +114,9 @@ const EmpNavbar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem value="">
-                <Typography></Typography>
-              </MenuItem>
+               <MenuItem value={user.companyName}>
+                  <Typography>{user.companyName}</Typography>
+                </MenuItem>
               <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
             </Select>
           </FormControl>
@@ -172,8 +168,7 @@ const EmpNavbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <Message sx={{ fontSize: "25px" }} />
-            <Notifications sx={{ fontSize: "25px" }} />
+            
            
             <FormControl variant="standard" value="">
               <Select
