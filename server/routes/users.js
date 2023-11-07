@@ -27,11 +27,12 @@ import {
 
 import { verifyToken } from "../middleware/auth.js";
 import { jobCreation } from "../controllers/employer.js";
+import { userVerification } from "../middleware/auth.js";
 
 const router = express.Router();
 
 /* READ */
-router.get("/:id", verifyToken, getUser);
+router.get("/:id", getUser)
 router.post("/profile/:id", verifyToken, editUserDetails);
 
 router.get("/friend/:email", verifyToken, getFriendProfile);

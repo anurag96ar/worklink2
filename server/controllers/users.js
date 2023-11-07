@@ -14,9 +14,12 @@ export const initialiseSocket = (ao) => {
 /* READ */
 export const getUser = async (req, res) => {
   try {
+    console.log("get user here");
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(id); 
+    console.log(user,"axios error");
     res.status(200).json(user);
+    // res.json("okayyyy")
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

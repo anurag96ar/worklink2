@@ -100,7 +100,7 @@ export const empVerifyOtp = async (req, res) => {
 export const empLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const emp = await Employer.findOne({ email: email, blockStatus:false, isApproved:true });
+    const emp = await Employer.findOne({ email: email, blockStatus: false, isApproved: true });
     if (!emp) return res.status(400).json({ msg: "Employer does not exist. " });
 
     const isMatch = await bcrypt.compare(password, emp.password);
@@ -116,10 +116,10 @@ export const empLogin = async (req, res) => {
 
 export const jobCreation = async (req, res) => {
   try {
-    
-    
+
+
     const {
-     email,
+      email,
       jobDescription,
       jobTitle,
       location,
@@ -135,41 +135,71 @@ export const jobCreation = async (req, res) => {
       salary
     });
 
-   
+
 
 
     const savedJob = await newJob.save();
-    console.log(savedJob,"Saved the job here");
+    console.log(savedJob, "Saved the job here");
     const id = savedJob._id
 
-   const notification = new Notification({
-    notification_title:jobTitle,
-   jobId:id,
-   })
+    const notification = new Notification({
+      notification_title: jobTitle,
+      jobId: id,
+    })
 
-   const savedNotification = await notification.save();
+    const savedNotification = await notification.save();
 
-   console.log(savedNotification,"Notification data");
+    console.log(savedNotification, "Notification data");
 
-    io.emit("new-job", { message: "Success", job: savedJob  });
-   
-       
-    res.status(201).json({ job: savedJob});
+    io.emit("new-job", { message: "Success", job: savedJob });
+
+
+    res.status(201).json({ job: savedJob });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 
-export const getJobsList=async(req,res)=>{
-  const jobsList=await Job.find({});
-  console.log(jobsList);
+export const getJobsList = async (req, res) => {
+  const { email } = req.body
+
+  const jobsList = await Job.find({ email: email });
+
   res.json(jobsList);
 }
 
-export const appliedUser =async(req,res)=>{
-  const {jobId} = req.body
-  const appliedList= await JobModel.find({jobId:jobId});
+export const appliedUser = async (req, res) => {
+  const { jobId } = req.body
+  const appliedList = await JobModel.find({ jobId: jobId });
   console.log(appliedList);
   res.json(appliedList);
+}
+
+
+export const getJobAppliedCount = async (req, res) => {
+  const { email } = req.body
+  console.log(email, "email")
+  const jobList = await Job.find({ email: email });
+  let count = 0;
+  const data = await Promise.all(
+
+    jobList.map(async (jobItem) => {
+      // Query the table to find the ID for each job item
+
+      const result = await JobModel.find({
+        jobId: jobItem._id,
+
+      });
+      console.log(result, "result")
+      if (result.length > 0) {
+        count=count+result.length;
+        return result; // Return the ID if found
+      } else {
+        return null; // Return null if not found
+      }
+    })
+  );
+  console.log(count, "count")
+  res.json(count);
 }

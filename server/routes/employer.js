@@ -4,15 +4,16 @@ import {
     empVerifyOtp,
     empLogin,
     getJobsList,
-    appliedUser
+    appliedUser,getJobAppliedCount
 } from "../controllers/employer.js"
 
 const router = express.Router();
  
 router.post("/emplogin",empLogin)
 router.post("/otp",empVerifyOtp)
-router.get("/joblist",getJobsList)
+router.post("/joblist",getJobsList)
 router.post("/applied",appliedUser)
+router.post("/getJobAppliedCount",getJobAppliedCount)
 
 
 
