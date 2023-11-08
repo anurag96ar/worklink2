@@ -22,17 +22,16 @@ import {
     applyJob,
     getNofication,
     markNotificationRead,
-    getJobDetails
+    getJobDetails,getMyConversation
 } from "../controllers/users.js"
 
 import { verifyToken } from "../middleware/auth.js";
 import { jobCreation } from "../controllers/employer.js";
-import { userVerification } from "../middleware/auth.js";
 
 const router = express.Router();
 
 /* READ */
-router.get("/:id", getUser)
+router.get("/:id", verifyToken, getUser);
 router.post("/profile/:id", verifyToken, editUserDetails);
 
 router.get("/friend/:email", verifyToken, getFriendProfile);
@@ -58,6 +57,8 @@ router.post("/applyJob",applyJob)
 router.get("/getNotification/:email",getNofication)
 router.post("/markRead",markNotificationRead)
 router.post("/getjobdetail",getJobDetails)
+
+router.get("/getMyConversation/:userId/:loggedInUser",getMyConversation)
 
 
 export default router;

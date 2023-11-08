@@ -14,12 +14,9 @@ export const initialiseSocket = (ao) => {
 /* READ */
 export const getUser = async (req, res) => {
   try {
-    console.log("get user here");
     const { id } = req.params;
-    const user = await User.findById(id); 
-    console.log(user,"axios error");
+    const user = await User.findById(id);
     res.status(200).json(user);
-    // res.json("okayyyy")
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -280,6 +277,7 @@ export const getConversation = async (req, res) => {
             receiverId: user._id,
             email: user.email,
             firstName: user.firstName,
+            picturePath: user.picturePath
           },
           conversationId: conversation._id,
         };
@@ -297,17 +295,22 @@ export const userMessage = async (req, res) => {
 
     if (!senderId || !message)
       return res.status(400).send("Please fill all required fields");
-    if (conversationId === "new" && receiverId) {
+    console.log(conversationId, "Jayuuuuu123789")
+    console.log(receiverId, "Jayuuuuu123789")
+    if (conversationId === "new") {
+
       const newCoversation = new Conversations({
         members: [senderId, receiverId],
       });
       await newCoversation.save();
+      console.log(newCoversation, "Jayuuuuu123")
       const newMessage = new Messages({
         conversationId: newCoversation._id,
         senderId,
         message,
       });
       await newMessage.save();
+      console.log(newMessage, "Jayuuuuu123")
       return res.status(200).send("Message sent successfully");
     } else if (!conversationId && !receiverId) {
       return res.status(400).send("Please fill all required fields");
@@ -379,11 +382,12 @@ export const getAllUsers = async (req, res) => {
 };
 
 export const getNofication = async (req, res) => {
-  const {email} = req.params
+  const { email } = req.params
 
-  console.log(email,"email in params");
+  console.log(email, "email in params");
   const notification = await Notification.find({
-    "readBy.email": { $ne: email }},);
+    "readBy.email": { $ne: email }
+  },);
 
   res.json(notification);
 };
@@ -391,14 +395,14 @@ export const getNofication = async (req, res) => {
 export const markNotificationRead = async (req, res) => {
   try {
 
-    const { email,id } = req.body;
+    const { email, id } = req.body;
 
-    console.log(email,id,"email and ID is here");
+    console.log(email, id, "email and ID is here");
 
     const updatedNotification = await Notification.findByIdAndUpdate(
       id,
 
-      { readBy:[{isread:true, email:email } ]},
+      { readBy: [{ isread: true, email: email }] },
       { new: true }
     );
 
@@ -408,9 +412,73 @@ export const markNotificationRead = async (req, res) => {
   }
 };
 
-export const getJobDetails = async (req,res)=>{
-const {jobId} = req.body
-console.log(jobId,"job Id Id ID");
-const jobDetails = await Job.findById(jobId)
-res.status(200).json(jobDetails)
+export const getJobDetails = async (req, res) => {
+  const { jobId } = req.body
+  console.log(jobId, "job Id Id ID");
+  const jobDetails = await Job.findById(jobId)
+  res.status(200).json(jobDetails)
 }
+
+export const getMyConversation = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const loggedInUser=req.params.loggedInUser;
+    let conversationUserData = [];
+    const conversations = await Conversations.find({
+      members: { $in: [userId] },
+    });
+
+    if (conversations.length > 0) {
+      console.log(conversations, "conversations");
+       conversationUserData = Promise.all(
+        conversations.map(async (conversation) => {
+          const receiverId = conversation.members.find(
+            (member) => member !== userId
+          );
+          const user = await User.findById(userId);
+
+          return {
+            user: {
+              receiverId: receiverId,
+              email: user.email,
+              firstName: user.firstName,
+              picturePath: user.picturePath
+            },
+            conversationId: conversation._id,
+          };
+        })
+      );
+    } else {
+   
+      const newCoversation = new Conversations({
+        members: [loggedInUser, userId],
+      });
+  
+      await newCoversation.save();
+      const conversations = await Conversations.find({
+        members: { $in: [userId] },
+      });
+    }
+    res.status(200).json(await conversationUserData);
+     conversationUserData = Promise.all(
+      conversations.map(async (conversation) => {
+        const receiverId = conversation.members.find(
+          (member) => member !== userId
+        );
+        const user = await User.findById(userId);
+
+        return {
+          user: {
+            receiverId: receiverId,
+            email: user.email,
+            firstName: user.firstName,
+            picturePath: user.picturePath
+          },
+          conversationId: conversation._id,
+        };
+      })
+    );
+  } catch (error) {
+    console.log(error, "Error");
+  }
+};

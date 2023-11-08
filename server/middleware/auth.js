@@ -27,42 +27,37 @@ const User_Secret_key = process.env.JWT_SECRET;
 
 
 
- export const userVerification = async (req, res, next) => {
+  export const userVerification = async (req, res, next) => {
 
-  try {
-    
-    console.log("inside verification");
-    
-    const authorizationHeader = req.headers.authorization;
+    try {
+      
+      console.log("inside verification");
+      
+      const authorizationHeader = req.headers.authorization;
 
-    console.log(authorizationHeader,"Auther this");
-    
-    const token = authorizationHeader.split(" ")[1];
+      console.log(authorizationHeader,"Auther this");
+      
+      const token = authorizationHeader.split(" ")[1];
 
-
-      if (token === "undefined") {
-    console.log("undefined token");
-
-
-      return res.status(401).json({ message: "Authentication failed shijith" });
-
-    } else {
-
-
-
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decodedToken,"decoded token");
-
-      console.log(decodedToken,'this is decoded token')
+        if (token === "undefined") {
      
-      req.userId = decodedToken._id;
-    
-      next();
+        return res.status(401).json({ message: "Authentication failed Anurag" });
+
+      } else {
+
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(decodedToken,"decoded token");
+
+        console.log(decodedToken,'this is decoded token')
+      
+        req.userId = decodedToken._id;
+      
+        next();
+      }
+    } catch (error) {
+      return res.status(401).json({ message: "Authentication failed" });
     }
-  } catch (error) {
-    return res.status(401).json({ message: "Authentication failed" });
-  }
-};
+  };
 
 
 
