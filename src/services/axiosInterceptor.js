@@ -4,7 +4,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { setLogout } from '../state/state';
 
 export const instance = axios.create({
-    baseURL: 'http://localhost:3001', // Replace with your actual base URL
+    baseURL: 'worklink.tech', // Replace with your actual base URL
   });
 
   
