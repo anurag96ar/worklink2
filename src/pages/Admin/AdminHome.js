@@ -8,6 +8,7 @@ import Card from 'react-bootstrap/Card';
 import { Box } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
 import { Chart } from "react-google-charts";
+import { instance } from "../../services/axiosInterceptor";
 
 
 function AdminHome() {
@@ -39,8 +40,8 @@ function AdminHome() {
   useEffect(() => {
 
 
-    axios
-      .get("http://localhost:3001/admin/userslist")
+    instance
+      .get("/admin/userslist")
       .then((response) => {
         // Check if the response data is an array before setting the state
         console.log(response.data);
@@ -53,8 +54,8 @@ function AdminHome() {
         console.error("Error fetching data:", error);
       });////
 
-    axios
-      .get("http://localhost:3001/admin/blockedPost")
+    instance
+      .get("/admin/blockedPost")
       .then((response) => {
         // Check if the response data is an array before setting the state
         console.log(response.data);
@@ -67,8 +68,8 @@ function AdminHome() {
         console.error("Error fetching data:", error);
       });
     ///////
-    axios
-      .get("http://localhost:3001/admin/appliedJobs")
+    instance
+      .get("/admin/appliedJobs")
       .then((response) => {
         // Check if the response data is an array before setting the state
         console.log(response.data);
@@ -82,8 +83,8 @@ function AdminHome() {
       });
     /////
 
-    axios
-      .get("http://localhost:3001/admin/blockedUser")
+    instance
+      .get("/admin/blockedUser")
       .then((response) => {
         // Check if the response data is an array before setting the state
         console.log(response.data);
@@ -97,8 +98,8 @@ function AdminHome() {
       });
 
     ////////////
-    axios
-      .post("http://localhost:3001/users/joblist", {
+    instance
+      .post("/users/joblist", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

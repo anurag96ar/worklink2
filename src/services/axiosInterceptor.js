@@ -3,19 +3,22 @@ import { ToastContainer, toast } from "react-toastify";
 import { useSelector,useDispatch } from "react-redux";
 import { setLogout } from '../state/state';
 
+export const instance = axios.create({
+    baseURL: 'http://localhost:3001', // Replace with your actual base URL
+  });
 
-const instance = axios.create({
-  baseURL: 'http://localhost:3001', // Replace with your actual base URL
-});
+  
+export const createAxiosInstance = (params) => {
+   
+
 
 instance.interceptors.request.use(
   (config) => {
-    // const accessToken = useSelector((state) => state.token);
-    // console.log(accessToken,"my token is here");
-
-    // if (accessToken) {
-    //   config.headers['Authorization'] = `Bearer ${accessToken}`
-    // }
+    const accessToken = params.accessToken
+   
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`
+    }
 
     return config;
   },
@@ -30,12 +33,12 @@ instance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log("axios error here");
+    console.log(error,"axios error here");
     if(error.code==="ECONNABORTED") toast.error("This request tooking long to respond",{position:toast.POSITION.TOP_CENTER})
    else if (error.response.status === 403) {
       toast.error(`${error.response.data.message}`,{position:toast.POSITION.TOP_CENTER})
       localStorage.removeItem('token')
-      window.location.href = '/login';
+      window.location.href = '/';
 
     }
     else{
@@ -45,5 +48,5 @@ instance.interceptors.response.use(
 
   }
 );
+}
 
-export default instance;

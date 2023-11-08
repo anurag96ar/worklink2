@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { instance } from "../../services/axiosInterceptor";
 
 const UserProfile = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
@@ -25,11 +26,9 @@ const UserProfile = ({ userId, picturePath }) => {
 
   const getUser = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/users/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await instance.get(
+        `/users/${userId}`
+        
       );
       setUser(response.data);
     } catch (error) {

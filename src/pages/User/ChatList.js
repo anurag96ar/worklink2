@@ -10,6 +10,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
 
+import { useLocation } from 'react-router-dom';
+import { instance } from "../../services/axiosInterceptor";
 const Dashboard = () => {
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState({});
@@ -20,26 +22,51 @@ const Dashboard = () => {
 
   const user = useSelector((state) => state.user);
   const fullName = `${user.firstName} ${user.lastName}`;
+  const userProfilePic = `${user.picturePath}`;
   const userId = useSelector((state) => state.user._id);
   const [connectionData, setConnectionData] = useState([]);
   const token = useSelector((state) => state.token);
   const email = useSelector((state) => state.user.email);
-
+  const state = useLocation();
   useEffect(() => {
+
+    console.log(state.state, "jayaaaaaa");
+    if (state.state != null) {
+
+      const fetchMyConverstaion = async () => {
+        const response = await instance.get(
+          `/users/getMyConversation/${state.state}/${userId}`,
+          {
+            "Content-Type": "application/json",
+          }
+        );
+
+        const resData = response.data;
+        
+        var data = { receiver: resData[0].user, conversationId: resData[0].conversationId, }
+        setMessages(data)
+        setMessage("")
+        fetchMessages(resData[0].conversationId, resData[0].user)
+        //setConversations(resData);
+      };
+      fetchMyConverstaion()
+    }
     const fetchConverstaion = async () => {
-      const response = await axios.get(
-        `http://localhost:3001/users/getconversation/${userId}`,
+      const response = await instance.get(
+        `/users/getconversation/${userId}`,
         {
           "Content-Type": "application/json",
         }
       );
 
       const resData = response.data;
-      console.log(resData, "Here res res pres");
+     
 
       setConversations(resData);
+      getConnection();
     };
     fetchConverstaion();
+   
   }, []);
 
   useEffect(() => {
@@ -61,7 +88,7 @@ const Dashboard = () => {
         ],
       }));
     });
-   
+
   }, [socket]);
 
   useEffect(() => {
@@ -71,31 +98,40 @@ const Dashboard = () => {
   const getConnection = async () => {
     const formData = new FormData();
     formData.append("email", email);
-  
 
-    var data = await axios.post(
-      "http://localhost:3001/users/myConnections",
+
+    var data = await instance.post(
+      "/users/myConnections",
       formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+         
           "Content-Type": "application/json",
         },
       }
     );
-    setConnectionData(data.data);
    
+    setConnectionData(data.data);
+    // var finaldata = [];
+    // data.data.forEach((item, index) => {
+    //   console.log(item, "ConnectionData");
+    
+    //   conversations.map(({ conversationId, user }) => {
+    //     console.log(user, "conversations  itemmmm111");
+    //     if (item._id != user.receiverId) {
+    //       setConnectionData([...connectionData, item]);
+    //     }
+    //   });
+    // });
+
   };
 
-  useEffect(() => {
-   
-    getConnection();
-  }, []);
+ 
 
   const fetchMessages = async (conversationId, receiver) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3001/users/getmessage/${conversationId}`,
+      const response = await instance.get(
+        `/users/getmessage/${conversationId}`,
         {
           params: {
             senderId: user?._id,
@@ -108,7 +144,7 @@ const Dashboard = () => {
       );
 
       const resData = response.data;
-    
+      console.log(receiver, "receiver dataaaaaa");
       setMessages({ messages: resData, receiver, conversationId });
     } catch (error) {
       // Handle errors here
@@ -118,24 +154,23 @@ const Dashboard = () => {
 
   const sendMessage = async (e) => {
     try {
-      setMessage("");
-      
+
+
       socket?.emit("sendMessage", {
         senderId: user?._id,
-        receiverId: messages?.receiver?.receiverId,
+        receiverId: messages?.receiver?._id,
         message,
         conversationId: messages?.conversationId,
       });
 
-    
 
-      await axios.post(
-        "http://localhost:3001/users/message",
+      await instance.post(
+        "/users/message",
         {
           conversationId: messages?.conversationId,
           senderId: user?._id,
           message,
-          receiverId: messages?.receiver?.receiverId,
+          receiverId: messages?.receiver?._id,
         },
         {
           headers: {
@@ -143,6 +178,7 @@ const Dashboard = () => {
           },
         }
       );
+      setMessage("");
     } catch (error) {
       // Handle errors here
       console.error("Error sending message:", error);
@@ -163,12 +199,8 @@ const Dashboard = () => {
         >
           <div className="flex items-center my-8 mx-14">
             <div>
-              <img
-                src={tutorialsdev}
-                width={75}
-                height={75}
-                className="border border-primary p-[2px] rounded-full"
-              />
+              <UserImage size={60} image={userProfilePic} />
+
             </div>
             <div className="ml-8">
               <h3 className="text-2xl">{user?.firstName}</h3>
@@ -188,10 +220,8 @@ const Dashboard = () => {
                         onClick={() => fetchMessages(conversationId, user)}
                       >
                         <div>
-                          <img
-                            src={tutorialsdev}
-                            className="w-[60px] h-[60px] rounded-full p-[2px] border border-primary"
-                          />
+                          <UserImage size={60} image={user?.picturePath} />
+
                         </div>
                         <div className="ml-6">
                           <h3 className="text-lg font-semibold">
@@ -215,19 +245,20 @@ const Dashboard = () => {
         </div>
         <div className="w-[50%] h-screen bg-white flex flex-col items-center">
           {messages?.receiver?.firstName && (
-            <div   style={{
+            <div style={{
               width: "100%",
               backgroundColor: "#e3e1e1", // Replace with your desired background color
               height: "90px",
-             
-            
+
+
               display: "flex", // Display as a flex container
               alignItems: "center", // Center vertically
               paddingLeft: "14px", // Left padding
               paddingRight: "14px", // Right padding
             }}>
               <div className="cursor-pointer">
-              <UserImage size="80px" image={user.picturePath} />
+
+                <UserImage size={60} image={messages?.receiver?.picturePath} />
               </div>
               <div className="ml-6 mr-auto">
                 <h3 className="text-lg">{messages?.receiver?.firstName}</h3>
@@ -288,6 +319,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Input Box */}
           <div className="p-14 w-full flex items-center">
             <Input
               placeholder="Type a message..."
@@ -297,9 +329,8 @@ const Dashboard = () => {
               inputClassName="p-4 border-0 shadow-md rounded-full bg-light focus:ring-0 focus:border-0 outline-none"
             />
             <div
-              className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${
-                !message && "pointer-events-none"
-              }`}
+              className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && "pointer-events-none"
+                }`}
               onClick={() => sendMessage()}
             >
               <svg
@@ -320,9 +351,8 @@ const Dashboard = () => {
               </svg>
             </div>
             <div
-              className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${
-                !message && "pointer-events-none"
-              }`}
+              className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && "pointer-events-none"
+                }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -344,44 +374,45 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* 3rd row */}
         <div className="w-[25%] h-screen bg-light px-8 py-16 overflow-scroll">
           <div className="text-primary text-lg">People</div>
           <div>
             {connectionData.length > 0 ? (
-              connectionData.map(( user ) => {
+              connectionData.map((frnd) => {
                 return (
                   <div className="flex items-center py-8 border-b border-b-gray-300">
                     <div
                       className="cursor-pointer flex items-center"
 
-                      onClick={() =>{ 
-                       const  conversationId = "new"
-                        const receiver = conversations.map((data)=>{
-                          console.log(conversations,"here convo");
-                          console.log(data.conversationId,"convo ID");
-                          console.log(userId,"user ID");
-
-                           if(data.conversationId===userId){
-                              conversationId=data.conversationId
-                           }
-                            
-                        });
+                      onClick={async () => {
+                        let conversationId = "new"
+                        console.log(frnd, "here connection");
+                        const receiver = await conversations.map((data) => {
                         
-                          console.log(conversationId);
-                        fetchMessages(conversationId, user)}}
+               
+                          console.log(data, "sender ID");
+                
+
+                      if(frnd._id== data.user.receiverId){
+                            conversationId = data.conversationId
+                          
+                      }
+                        });
+
+                        fetchMessages(conversationId, frnd)
+                      }}
                     >
                       <div>
-                        <img
-                          src={tutorialsdev}
-                          className="w-[60px] h-[60px] rounded-full p-[2px] border border-primary"
-                        />
+                        <UserImage size={60} image={frnd.picturePath} />
                       </div>
                       <div className="ml-6">
                         <h3 className="text-lg font-semibold">
-                          {user?.firstName}
+                          {frnd?.firstName}
                         </h3>
                         <p className="text-sm font-light text-gray-600">
-                          {user?.email}
+                          {frnd?.email}
                         </p>
                       </div>
                     </div>
@@ -398,6 +429,7 @@ const Dashboard = () => {
       </div>
     </div>
   );
+
 };
 
 export default Dashboard;

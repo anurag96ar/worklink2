@@ -7,6 +7,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { instance } from "../../services/axiosInterceptor";
 
 const JobNotification = () => {
   const navigate = useNavigate();
@@ -20,14 +21,14 @@ const JobNotification = () => {
   const { email } = useSelector((state) => state.user);
   const [jobData,setJobData] =useState()
   const myJobid = localStorage.getItem("jobId");
-  console.log(myJobid, "job ID here");
+ 
 
   const getJobDetails = async () =>{
     const formData = new FormData();
     formData.append("jobId", myJobid);
 
-    const response = await axios.post(
-        `http://localhost:3001/users/getjobdetail`,formData,
+    const response = await instance.post(
+        `/users/getjobdetail`,formData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -52,13 +53,12 @@ const JobNotification = () => {
     formData.append("jobTitle", jobTitle);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users/applyJob",
+      const response = await instance.post(
+        "/users/applyJob",
 
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }

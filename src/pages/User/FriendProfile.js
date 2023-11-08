@@ -27,6 +27,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { setLogin } from "../../state/state";
+import { instance } from "../../services/axiosInterceptor";
 
 const FriendProfile = () => {
   const [user, setUser] = useState(null);
@@ -44,14 +45,16 @@ const FriendProfile = () => {
 
  
   const getUser = async () => {
-    console.log(userId,"user usuer uereurer");
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUser(data);
+    try {
+      const response = await instance.get(`/users/${userId}`);
+      const data = response.data;
+      setUser(data);
+    } catch (error) {
+      // Handle any errors here
+      console.error("Error fetching user:", error);
+    }
   };
+  
 
   useEffect(() => {
     getUser();
@@ -68,10 +71,9 @@ const FriendProfile = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/uploadProfile",
-        formData,
-      );
+
+      const response = await instance.post(`/uploadProfile`,formData);
+      
 
       const posts = response.data;
       getUser();

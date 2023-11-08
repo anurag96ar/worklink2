@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import UserImage from "../../components/UserImage";
-
+import { instance } from "../../services/axiosInterceptor";
 function Connections() {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const { _id, picturePath } = useSelector((state) => state.user);
@@ -30,8 +30,8 @@ function Connections() {
     formData.append("email", email);
     console.log(formData);
 
-    var data = await axios.post(
-      "http://localhost:3001/users/myRequest",
+    var data = await instance.post(
+      "/users/myRequest",
       formData,
       {
         headers: {
@@ -49,8 +49,8 @@ function Connections() {
     formData.append("email", email);
     console.log(formData);
 
-    var data = await axios.post(
-      "http://localhost:3001/users/myConnections",
+    var data = await instance.post(
+      "/users/myConnections",
       formData,
       {
         headers: {
@@ -76,8 +76,8 @@ function Connections() {
     console.log(formData);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users/accept",
+      const response = await instance.post(
+        "/users/accept",
         formData,
         {
           headers: {
@@ -108,8 +108,8 @@ function Connections() {
     console.log(formData);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users/delete",
+      const response = await instance.post(
+        "/users/delete",
         formData,
         {
           headers: {
@@ -281,7 +281,7 @@ function Connections() {
                 variant="contained"
                 color="primary"
                 style={{ marginLeft: "auto", borderRadius: "50px" }}
-              >
+                onClick={() =>  navigate("/chat",{ state: user._id })} >
                 Message
               </Button>
             </div>

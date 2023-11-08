@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import UserImage from "../../components/UserImage";
+import { instance } from "../../services/axiosInterceptor";
+
 
 function AllInvites() {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -30,16 +32,15 @@ function AllInvites() {
     formData.append("email", email);
    
 
-    var data = await axios.post(
-      "http://localhost:3001/users/myRequest",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
+    const data = await instance.post(`/users/myRequest`,formData,
+    {
+          headers: {          
+            "Content-Type": "application/json",
+           },
+          }
     );
+
+   
     setUserData(data.data);
   
   };
@@ -48,17 +49,15 @@ function AllInvites() {
     const formData = new FormData();
     formData.append("email", email);
    
-
-    var data = await axios.post(
-      "http://localhost:3001/users/myConnections",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
+    const data = await instance.post(`/users/myConnections`,formData,
+    {
+          headers: {          
+            "Content-Type": "application/json",
+           },
+          }
     );
+
+    
     setConnectionData(data.data);
     
   };
@@ -77,16 +76,15 @@ function AllInvites() {
    
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users/accept",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await instance.post(`/users/accept`,formData,
+      {
+            headers: {          
+              "Content-Type": "application/json",
+             },
+            }
       );
+      
+     
 
       const connect = response.data;
       // window.location.reload();

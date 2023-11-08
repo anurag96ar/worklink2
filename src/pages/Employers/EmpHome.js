@@ -8,6 +8,7 @@ import Card from 'react-bootstrap/Card';
 import { Box } from '@mui/material';
 
 import { Chart } from "react-google-charts";
+import { instance } from "../../services/axiosInterceptor";
 
 function EmpHome() {
 
@@ -30,9 +31,9 @@ function EmpHome() {
   useEffect(() => {
     const formData = new FormData();
     formData.append("email", user.email);
-    console.log(user.email, "email");
-    axios
-      .post("http://localhost:3001/employer/joblist", formData, {
+  
+    instance
+      .post("/employer/joblist", formData, {
         headers: {
 
           "Content-Type": "application/json",
@@ -46,8 +47,8 @@ function EmpHome() {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-    axios
-      .post("http://localhost:3001/employer/getJobAppliedCount", formData, {
+    instance
+      .post("/employer/getJobAppliedCount", formData, {
         headers: {
 
           "Content-Type": "application/json",
@@ -55,7 +56,7 @@ function EmpHome() {
       })
       .then((response) => {
         // Check if the response data is an array before setting the state
-        console.log(response.data);
+        
         setTotalAppliedJob(response.data);
       })
       .catch((error) => {

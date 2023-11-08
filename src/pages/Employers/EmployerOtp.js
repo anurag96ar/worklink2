@@ -18,7 +18,7 @@ function EmployerOtp() {
   const handleOTPChange = (e) => {
     setOTP(e.target.value);
   };
-  console.log(otp, "111111111111111111111111");
+  
   const email = localStorage.getItem("userEmail");
 
   const LoginUser = async (e) => {

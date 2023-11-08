@@ -36,14 +36,19 @@ import JobListing from "./pages/User/JobListing";
 import ChatList from "./pages/User/ChatList";
 import AppliedUsers from "./pages/Employers/AppliedUsers";
 import JobNotification from "./pages/User/JobNotification";
-import GoogleSignUp from "./pages/User/GoogleSignUp";
 
-
+import {createAxiosInstance} from "./services/axiosInterceptor";
 
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
+  const accessToken = useSelector((state) => state.token);
+
+
+  createAxiosInstance({
+    accessToken,
+  })
 
   // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -58,7 +63,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/googlesignupform" element={<GoogleSignUp />} />
+           
             <Route path="/register/:name" element={<Register />} />
             <Route
               path="/feeds"

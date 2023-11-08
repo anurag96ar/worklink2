@@ -177,9 +177,9 @@ const Register = () => {
                   onChange={handleDropdownChange}
                 >
                   <option value="">&#9660;</option>
-                  <option value="full-time">Full-Time</option>
-                  <option value="part-time">Part-Time</option>
-                  <option value="intern">Intern</option>
+                  <option value="Full-time">Full-Time</option>
+                  <option value="Part-time">Part-Time</option>
+                  <option value="Intern">Intern</option>
                 </select>
               </div>
             </div>

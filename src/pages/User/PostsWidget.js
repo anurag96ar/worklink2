@@ -4,6 +4,7 @@ import { setPosts } from "../../state/state";
 import PostWidget from "./PostWidget";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { instance } from "../../services/axiosInterceptor";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
@@ -25,12 +26,12 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       formData.append("page", fromCallback?index: page );
 
 
-      const response = await axios.post(
-        "http://localhost:3001/getPost",
+      const response = await instance.post(
+        "/getPost",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            
             "Content-Type": "application/json",
           },
         }
@@ -83,11 +84,9 @@ setPostData(updatedPosts);
   const getUserPosts = async (fromCallback=false, index=0) => {
   
     try {
-      const response = await axios.get(
-        `http://localhost:3001/posts/${userId}/${fromCallback?index: page}/posts`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const response = await instance.get(
+        `/posts/${userId}/${fromCallback?index: page}/posts`,
+        
       );
       const data = response.data;
       // dispatch(setPostData(data));

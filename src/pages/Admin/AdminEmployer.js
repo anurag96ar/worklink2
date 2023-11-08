@@ -3,13 +3,14 @@ import axios from "axios";
 import Headers from "../../components/Headers";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import { instance } from "../../services/axiosInterceptor";
 
 const AdminEmployers = () => {
   const [empData, setEmpData] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/admin/employerlist")
+    instance
+      .get("/admin/employerlist")
       .then((response) => {
         // Check if the response data is an array before setting the state
         // console.log(response.data);
@@ -29,9 +30,8 @@ const AdminEmployers = () => {
 
   const handleBlock = async (id) => {
 
-const res = await axios.put(`http://localhost:3001/admin/blockEmp/${id}`);
-    console.log(id);
-    console.log(res, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+const res = await instance.put(`/admin/blockEmp/${id}`);
+  
 
     const updatedUser = empData.map((i) =>
       i._id === id ? { ...i, blockStatus: true } : i
@@ -40,11 +40,10 @@ const res = await axios.put(`http://localhost:3001/admin/blockEmp/${id}`);
   };
 
   const handleUnblock = async (id) => {
-    const resss = await axios.put(
-      `http://localhost:3001/admin/unblockEmp/${id}`
+    const resss = await instance.put(
+      `/admin/unblockEmp/${id}`
     );
-    console.log(id);
-    console.log(resss, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+  
 
     const updatedUser = empData.map((i) =>
       i._id === id ? { ...i, blockStatus: false } : i
@@ -53,11 +52,10 @@ const res = await axios.put(`http://localhost:3001/admin/blockEmp/${id}`);
   };
 
   const empApprove = async (id) => {
-    const resss = await axios.put(
-      `http://localhost:3001/admin/approve/${id}`
+    const resss = await instance.put(
+      `/admin/approve/${id}`
     );
-    console.log(id);
-    console.log(resss, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+ 
 
     const updatedUser = empData.map((i) =>
       i._id === id ? { ...i, isApproved: true } : i

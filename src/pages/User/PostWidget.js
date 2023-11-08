@@ -29,6 +29,7 @@ import Form from "react-bootstrap/Form";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { instance } from "../../services/axiosInterceptor";
 
 const PostWidget = ({
   handleCallback,
@@ -109,27 +110,7 @@ const PostWidget = ({
     return <p>{timeAgo}</p>;
   }
 
-  // const getPosts = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("email", email);
-  //     const response = await axios.post(
-  //       "http://localhost:3001/getPost",
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     const data = response.data;
-  //     dispatch(setPostData(data));
-  //   } catch (error) {
-  //     console.error("Error fetching posts:", error);
-  //     // Handle errors here
-  //   }
-  // };
+  
 
   const showMenu = (e) => {
     e.preventDefault();
@@ -169,12 +150,11 @@ const PostWidget = ({
     const formData = new FormData();
     formData.append("description", newDes);
 
-    const response = await axios.post(
-      `http://localhost:3001/title/${postId}`,
+    const response = await instance.post(
+      `/title/${postId}`,
       formData,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
+        headers: {  
           "Content-Type": "application/json",
         },
       }
@@ -190,7 +170,7 @@ const PostWidget = ({
   };
 
   const blockPost = async ()=>{
-    const response = await axios.post(`http://localhost:3001/blockPost/${postId}`,
+    const response = await instance.post(`/blockPost/${postId}`,
     {
     
         "Content-Type": "application/json",
@@ -209,11 +189,11 @@ const PostWidget = ({
   }
 
   const handleDelete = async () => {
-    const response = await axios.delete(
-      `http://localhost:3001/deletePost/${postId}`,
+    const response = await instance.delete(
+      `/deletePost/${postId}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+        
           "Content-Type": "application/json",
         },
       }
@@ -230,12 +210,12 @@ const PostWidget = ({
 
   const patchLike = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3001/${postId}/like`,
+      const response = await instance.patch(
+        `/${postId}/like`,
         { userId: loggedInUserId },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            
             "Content-Type": "application/json",
           },
         }
@@ -253,13 +233,13 @@ const PostWidget = ({
 
   const handleReport = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3001/${postId}/report`,
+      const response = await instance.patch(
+        `/${postId}/report`,
         { email: email },
 
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+          
             "Content-Type": "application/json",
           },
         }
@@ -278,8 +258,8 @@ const PostWidget = ({
 
   const patchComment = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3001/${postId}/comment`,
+      const response = await instance.patch(
+        `/${postId}/comment`,
         {
           userId: loggedInUserId,
           comment: userComment,
@@ -398,7 +378,7 @@ const PostWidget = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`http://worklink.tech/assets/${picturePath}`}
         />
       )}
       <FlexBetween mt="0.25rem">

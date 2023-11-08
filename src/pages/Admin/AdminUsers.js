@@ -4,6 +4,7 @@ import Headers from "../../components/Headers";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { instance } from "../../services/axiosInterceptor";
 const AdminUsers = () => {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
@@ -13,8 +14,8 @@ console.log(userMail,"YYYYYYYYYYYYYYYYYYYYYYY");
   useEffect(() => {
     const userEmail= localStorage.getItem("email")
     setUserMail(userEmail)
-    axios
-      .get("http://localhost:3001/admin/userslist")
+    instance
+      .get("/admin/userslist")
       .then((response) => {
         // Check if the response data is an array before setting the state
         // console.log(response.data);
@@ -33,7 +34,7 @@ console.log(userMail,"YYYYYYYYYYYYYYYYYYYYYYY");
   }, []);
 
   const handleBlock = async (id) => {
-    const res = await axios.put(`http://localhost:3001/admin/blockUser/${id}`);
+    const res = await instance.put(`/admin/blockUser/${id}`);
     console.log(id);
     console.log(res, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
@@ -44,11 +45,10 @@ console.log(userMail,"YYYYYYYYYYYYYYYYYYYYYYY");
   };
 
   const handleUnblock = async (id) => {
-    const resss = await axios.put(
-      `http://localhost:3001/admin/unblockUser/${id}`
+    const resss = await instance.put(
+      `/admin/unblockUser/${id}`
     );
-    console.log(id);
-    console.log(resss, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+  
 
     const updatedUser = userData.map((i) =>
       i._id === id ? { ...i, blockStatus: false } : i

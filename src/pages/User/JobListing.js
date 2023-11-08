@@ -8,6 +8,7 @@ import { Email, Padding } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { instance } from "../../services/axiosInterceptor";
 
 
 function JobListing() {
@@ -37,10 +38,9 @@ function JobListing() {
   useEffect(() => {
     const userEmail = localStorage.getItem("email");
     setUserMail(userEmail);
-    axios
-      .post("http://localhost:3001/users/joblist", {
+    instance
+      .post("/users/joblist", {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       })
@@ -69,20 +69,21 @@ function JobListing() {
    
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users/applyJob",
+      const response = await instance.post(
+        "/users/applyJob",
         
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
       const jobsApplied = response.data;
+      console.log(jobsApplied,"Applied data");
      
       toast.success("Job Applied successfully");
+      handleClose()
     } catch (error) {
       // Handle errors here
       console.error("Error uploading post:", error);
@@ -129,7 +130,7 @@ function JobListing() {
                                 >
                                   Close
                                 </Button>
-                                <Button  variant="primary" onClick={()=>{applyJob();handleClose()}}>
+                                <Button  variant="primary" onClick={()=>{applyJob()}}>
                                   Apply
                                 </Button>
                               </Modal.Footer>
@@ -179,6 +180,7 @@ function JobListing() {
           </div>
         </div>
       </section>
+      <ToastContainer/>
     </div>
   );
 }

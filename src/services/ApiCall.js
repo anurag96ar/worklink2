@@ -1,4 +1,5 @@
 import axios from "axios";
+import { instance } from "./axiosInterceptor";
 
 export const commonrequest = async(methods,url,body,header)=>{
     let config = {
@@ -12,7 +13,7 @@ export const commonrequest = async(methods,url,body,header)=>{
     }
 
     // axios instance
-    return axios(config).then((data)=>{
+    return instance(config).then((data)=>{
         return data
     }).catch((error)=>{
         return error

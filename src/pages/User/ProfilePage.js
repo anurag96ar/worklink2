@@ -32,6 +32,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { setLogin } from "../../state/state";
+import { instance } from "../../services/axiosInterceptor";
 
 
 
@@ -72,31 +73,33 @@ const ProfilePage = () => {
 
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUser(data);
-    dispatch(
-      setLogin({
-        user: data,
-        token: token,
-      })
-    );
+    try {
+      const response = await instance.get(`/users/${userId}`);
+      const data = response.data;
+      setUser(data);
+      dispatch(
+        setLogin({
+          user: data,
+          token: token,
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   };
+  
 
   const getConnection = async () => {
     const formData = new FormData();
     formData.append("email", email);
    
 
-    var data = await axios.post(
-      "http://localhost:3001/users/myConnections",
+    var data = await instance.post(
+      "/users/myConnections",
       formData,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          
           "Content-Type": "application/json",
         },
       }
@@ -124,8 +127,8 @@ const ProfilePage = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/uploadProfile",
+      const response = await instance.post(
+        "/uploadProfile",
         
         formData,
         {
@@ -158,9 +161,9 @@ const ProfilePage = () => {
         formData.append("fromDate", fromDate);
         formData.append("toDate", toDate);
 
-      const response = await axios.post(`http://localhost:3001/users/profile/${userId}`,formData, {
+      const response = await instance.post(`/users/profile/${userId}`,formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          
           'Content-Type': 'application/json'
         },
       });

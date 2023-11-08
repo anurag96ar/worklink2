@@ -33,6 +33,7 @@ import io from "socket.io-client";
 import { Badge, Popover, List, ListItem, ListItemText } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
+import { instance } from "../services/axiosInterceptor";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -81,8 +82,8 @@ const Navbar = () => {
   }, []);
 
   const handleSaveNotification = async () => {
-    const response = await axios.get(
-      `http://localhost:3001/users/getNotification/${email}`,
+    const response = await instance.get(
+      `/users/getNotification/${email}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -101,8 +102,8 @@ const Navbar = () => {
     formData.append("email", email);
     formData.append("id", id);
     
-    const response = await axios.post(
-      `http://localhost:3001/users/markRead`,
+    const response = await instance.post(
+      `/users/markRead`,
       formData,
       {
         headers: {

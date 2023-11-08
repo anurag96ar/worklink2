@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserImage from "../../components/UserImage";
+import { instance } from "../../services/axiosInterceptor";
 
 import UserWidget from "./UserWidgets";
 
@@ -26,17 +27,14 @@ function AllConnections() {
     const formData = new FormData();
     formData.append("email", email);
    
-
-    var data = await axios.post(
-      "http://localhost:3001/users/myConnections",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
+    const data = await instance.post(`/users/myConnections`,formData,
+    {
+          headers: {          
+            "Content-Type": "application/json",
+           },
+          }
     );
+  
     setConnectionData(data.data);
   };
 
@@ -52,16 +50,15 @@ function AllConnections() {
     
 
     try {
-      const response = await axios.post(
-        "http://localhost:3001/users/unfollowUser",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+
+      const response = await instance.post(`/users/unfollowUser`,formData,
+      {
+            headers: {          
+              "Content-Type": "application/json",
+             },
+            }
       );
+      
 
       const connect = response.data;
     } catch (error) {

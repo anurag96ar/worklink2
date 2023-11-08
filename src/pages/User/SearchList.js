@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { requestFunction } from "../../services/Apis";
 import UserImage from "../../components/UserImage";
 import { useLocation } from 'react-router-dom';
+import { instance } from "../../services/axiosInterceptor";
 
 
 function SearchList() {
@@ -23,20 +24,20 @@ function SearchList() {
     
     formData.append("searchData", state.state);
     console.log(formData);
-  var response= await axios
-      .post("http://localhost:3001/searchList",formData, {
+  var response= await instance
+      .post("/searchList",formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          
           'Content-Type': 'application/json'
         },
       },)
-      console.log(response,"rrrrrrrrrrrrrrrrrr");
+    
       setUserData(response.data);
     
   }
 
   useEffect(() => {
-    console.log(state.state,"vvvvvvvvvvvvvvvvvvvvvvvvv");
+    
    
       search()
   }, []);
@@ -60,9 +61,9 @@ function SearchList() {
         console.log(formData);
       
         try {
-          const response = await axios.post("http://localhost:3001/users/connect", formData, {
+          const response = await instance.post("/users/connect", formData, {
             headers: {
-              Authorization: `Bearer ${token}`,
+              
               'Content-Type': 'application/json'
             },
           });

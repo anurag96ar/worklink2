@@ -2,6 +2,7 @@ import Headers from "../../components/Headers";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { instance } from "../../services/axiosInterceptor";
 
 function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -11,13 +12,12 @@ function AdminLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/admin/login", {
+      const response = await instance.post("/admin/login", {
         email,
         password,
       });
-      console.log("res,>>>>>>>>>>>>>>>>", response);
-      console.log(response.data.adminToken, "-----------adminToken");
-      console.log(response.data.email, "---------adminFirstName");
+     
+     
       const adminToken = response.data.adminToken;
       const adminEmailId = response.data.adminEmailId;
       console.log(adminToken);

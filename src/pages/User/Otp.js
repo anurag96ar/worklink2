@@ -55,8 +55,8 @@ function Otp() {
       <section>
         <div className="form_data">
           <div className="form_heading">
-            <h1>Welcome Back, Log In</h1>
-            <p>Hi, we are you glad you are back. Please login.</p>
+            <h1>Welcome aboard!</h1>
+            <p>Hi, we are you glad you are here. Please verify your mail.</p>
           </div>
           <form>
             <div className="form_input">

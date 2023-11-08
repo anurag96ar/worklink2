@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
+import { instance } from "../../services/axiosInterceptor";
 function EmpJobListing() {
   const [jobData, setJobData] = useState([]);
   const navigate = useNavigate();
@@ -16,9 +17,9 @@ function EmpJobListing() {
     setUserMail(userEmail);
     const formData = new FormData();
     formData.append("email", user.email);
-    console.log(user.email, "email");
-    axios
-      .post("http://localhost:3001/employer/joblist", formData, {
+  
+    instance
+      .post("/employer/joblist", formData, {
         headers: {
 
           "Content-Type": "application/json",

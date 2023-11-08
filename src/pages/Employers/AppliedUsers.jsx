@@ -4,6 +4,7 @@ import EmpNavbar from "../../components/EmpNavbar";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { instance } from "../../services/axiosInterceptor";
 
 function AppliedUsers() {
   const [jobData, setJobData] = useState([]);
@@ -15,13 +16,13 @@ function AppliedUsers() {
 
 
   const getAppliedUser = async () => {
-    console.log(userMail);
+    
     const formData = new FormData();
    
     formData.append("jobId",jobId );
 
     console.log(formData);
-  const response = await axios.post(`http://localhost:3001/employer/applied`,formData,
+  const response = await instance.post(`/employer/applied`,formData,
   {
     headers: {
      

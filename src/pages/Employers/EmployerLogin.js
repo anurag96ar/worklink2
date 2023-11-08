@@ -4,6 +4,8 @@ import { setLogin } from '../../state/state';
 import { useNavigate } from 'react-router-dom';
 import Headers from "../../components/Headers"; // Import your Navbar component
 import { ToastContainer, toast } from "react-toastify";
+import axios from 'axios';
+import { instance } from '../../services/axiosInterceptor';
 
 
 function EmployerLogin() {
@@ -24,35 +26,36 @@ function EmployerLogin() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    // Simulate a login request, replace with actual API call
-    // ...
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Assuming you receive a response containing user and token data
-    const response = await fetch('http://localhost:3001/employer/empLogin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+  try {
+    const response = await instance.post("/employer/empLogin", formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (response.status === 200) {
-      const data = await response.json();
+      const data = response.data;
       dispatch(
         setLogin({
-          user: data.emp,//[change]
+          user: data.emp, // Make sure to adjust the user property to match your response data
           token: data.token,
         })
       );
       localStorage.setItem("userEmail", email);
-      navigate('/emphomepage');
+      navigate("/emphomepage");
     } else {
       // Handle login error here
       toast.error("Please Contact Administrator");
-
     }
-  };
+  } catch (error) {
+    // Handle request error
+    console.error("Request error:", error);
+  }
+};
 
   return (
     <div>

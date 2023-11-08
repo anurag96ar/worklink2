@@ -1,16 +1,16 @@
-import { Box } from "@mui/material";
 
-const UserImage = ({ image, size = "60px" }) => {
+const UserImage = ({ image, size = 60 }) => {
   return (
-    <Box>
-      <img
-        style={{display:"inline-block", verticalAlign:"middle" , borderRadius: "100%" }}
-        width={size}
-        height={size}
-        alt="user"
-        src={`http://localhost:3001/assets/${image}`}
-      />
-      </Box>
+
+    <img
+      src={`http://worklink.tech/assets/${image}`}
+      width={size}
+
+      className="border border-primary p-[2px] rounded-full"
+      style={{ height: size }}
+    />
+
+
 
   );
 };

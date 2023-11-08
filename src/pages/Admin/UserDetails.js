@@ -30,6 +30,7 @@ import { setLogin } from "../../state/state";
 import { useLocation } from 'react-router-dom';
 import Headers from "../../components/Headers";
 import PostWidget from "../User/PostWidget";
+import { instance } from "../../services/axiosInterceptor";
 
 
 const UserDetails = () => {
@@ -58,7 +59,7 @@ const UserDetails = () => {
       const formData = new FormData();
       formData.append("email",userMail );
       console.log(formData);
-    const response = await axios.post(`http://localhost:3001/admin/usersdetails`,formData,
+    const response = await instance.post(`/admin/usersdetails`,formData,
     {
       headers: {
        
@@ -68,7 +69,7 @@ const UserDetails = () => {
 
       
       setUser(response.data)
-      const res = await axios.post(`http://localhost:3001/admin/userspost`,formData,
+      const res = await instance.post(`/admin/userspost`,formData,
       {
         headers: {
          

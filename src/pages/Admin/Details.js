@@ -29,21 +29,28 @@ import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { setLogin } from "../../state/state";
 import { useLocation } from 'react-router-dom';
+import { instance } from '../../services/axiosInterceptor';
 
 function Details() {
     const [userMail,setUserMail]=useState("")
     const getUser = async () => {
-        const formData = new FormData();
-        formData.append("email");
-        console.log(formData);
-        const response = await fetch(`http://localhost:3001/admin/usersdetails`, formData, {
+      const formData = new FormData();
+      formData.append("email");
+    
+      try {
+        const response = await instance.post("/admin/usersdetails", formData, {
           method: "POST",
         });
-        const data = await response.json();
-        // setUser(data);
-        
-      };
-      console.log(userMail);
+    
+        const data = response.data;
+        // Handle the response data as needed
+        console.log(data);
+      } catch (error) {
+        // Handle request error
+        console.error("Request error:", error);
+      }
+    };
+     
     
       useEffect(() => {
         const userEmail= localStorage.getItem("email")

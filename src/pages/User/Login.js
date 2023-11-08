@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { instance } from "../../services/axiosInterceptor";
 
 
 function Login() {
@@ -31,7 +32,7 @@ function Login() {
     e.preventDefault();
   
     try {
-      const response = await axios.post("http://localhost:3001/auth/login", formData, {
+      const response = await instance.post("/auth/login", formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -61,12 +62,12 @@ function Login() {
     console.log("inside handle google login");
     console.log(credentialResponseDecoded.email);
     let email = { email: credentialResponseDecoded.email };
-    const response = await axios.post(
-      "http://localhost:3001/auth/gooleLogin",
+    const response = await instance.post(
+      "/auth/gooleLogin",
 
       email
     );
-    console.log(response, "--------response-----------");
+
     const data = await response.data;
     if (response.data.message === "Google Login") {
       dispatch(
