@@ -38,10 +38,9 @@ import http from "http"
 const app = express();
 
 app.use(function(req, res, next) {
-  req.header("Access-Control-Allow-Origin", "http://localhost:3000", "https://worklink.vercel.app");
-  req.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000", "https://worklink.vercel.app");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Origin', 'https://worklink.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
 
