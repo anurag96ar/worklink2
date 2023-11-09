@@ -45,6 +45,7 @@ const app = express();
 // });
 
 // app.options("*", cors());
+app.use(cors())
 const allowedOrigins = ["https://worklink.vercel.app"];
 app.use(
   cors({
