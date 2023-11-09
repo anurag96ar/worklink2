@@ -35,7 +35,7 @@ function Login() {
       const response = await instance.post("/auth/login", formData, {
         headers: {
           "Content-Type": "application/json",
-          'Access-Control-Allow-Origin': '*',
+          "Access-Control-Allow-Origin": "https://worklink.vercel.app",
         },
       });
   
