@@ -38,7 +38,7 @@ import http from "http"
 const app = express();
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "http://worklink.vercel.app");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -46,7 +46,7 @@ app.use(function(req, res, next) {
 const server = http.createServer(app);
 const io = new SocketServer(server);
 app.use(cors());
-  
+
 
 // const corsOptions = {
 //   origin: 'http://localhost:3000', // or your frontend URL
