@@ -43,6 +43,7 @@ const app = express();
 //   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 //   next();
 // });
+const allowedOrigins = ["https://worklink.vercel.app"]
 
 app.options("*", cors());
 app.use(
