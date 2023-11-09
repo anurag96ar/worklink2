@@ -22,7 +22,7 @@ import {
     applyJob,
     getNofication,
     markNotificationRead,
-    getJobDetails,getMyConversation
+    getJobDetails,getMyConversation, checkAppliedJob
 } from "../controllers/users.js"
 
 import { verifyToken } from "../middleware/auth.js";
@@ -57,6 +57,7 @@ router.post("/applyJob",applyJob)
 router.get("/getNotification/:email",getNofication)
 router.post("/markRead",markNotificationRead)
 router.post("/getjobdetail",getJobDetails)
+router.post("/checkapplied",checkAppliedJob)
 
 router.get("/getMyConversation/:userId/:loggedInUser",getMyConversation)
 

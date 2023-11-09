@@ -482,3 +482,16 @@ export const getMyConversation = async (req, res) => {
     console.log(error, "Error");
   }
 };
+
+
+export const checkAppliedJob = async (req,res)=>{
+
+  const {email, jobId}= req.body
+
+  const appliedJob = await JobModel.find({appliedBy:email,jobId:jobId})
+
+  console.log(appliedJob,"Applied details");
+
+  res.status(200).json(appliedJob)
+
+}
