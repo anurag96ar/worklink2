@@ -44,8 +44,8 @@ const app = express();
 //   next();
 // });
 
-app.options("*", cors());
-app.use(cors({ origin: true, credentials: true }));
+// app.options("*", cors());
+// app.use(cors({ origin: true, credentials: true }));
 
 
 const server = http.createServer(app);
