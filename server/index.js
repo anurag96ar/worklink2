@@ -38,7 +38,7 @@ import http from "http"
 const app = express();
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://worklink2.vercel.app/");
+  res.header("Access-Control-Allow-Origin", "https://worklink.vercel.app/");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
