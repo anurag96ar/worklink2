@@ -45,8 +45,6 @@ const app = express();
 // });
 
 app.options("*", cors());
-app.use(cors())
-const allowedOrigins = ["https://worklink.vercel.app/"];
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -56,17 +54,22 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,
-  })
+    credentials: true,
+    methods: 'GET,POST,OPTIONS',
+    allowedHeaders: 'Origin,Content-Type,Accept'
+  })
 );
 
 const server = http.createServer(app);
 const io = new SocketServer(server, {
   cors: {
     origin: allowedOrigins,
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"], 
+    allowedHeaders: ["Origin", "Content-Type", "Accept"],
+    credentials: true
   },
 });
+
 
 
 
@@ -223,7 +226,7 @@ app.use("/users", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/employer", employerRoutes);
 
-const PORT = process.env.PORT || 6001;
+const PORT = process.env.PORT 
 
 
 mongoose
