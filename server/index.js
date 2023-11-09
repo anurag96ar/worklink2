@@ -45,7 +45,7 @@ app.use(function(req, res, next) {
 });
 
 const corsOptions = {
-  origin: ['http://localhost:3000','https://worklink.vercel.app','https://worklink.tech'],
+  origin: 'https://worklink.vercel.app',
   optionsSuccessStatus: 204, // No content response for preflight requests
 };
 
