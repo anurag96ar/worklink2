@@ -45,7 +45,7 @@ app.use(function(req, res, next) {
 
 const server = http.createServer(app); 
 const io = new SocketServer(server);
-app.use(cors());
+
 
 
 // const corsOptions = {
