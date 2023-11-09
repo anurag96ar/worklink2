@@ -37,20 +37,20 @@ import http from "http"
 
 const app = express();
 
-app.use(cors({
-  'allowedHeaders': ['sessionId', 'Content-Type'],
-  'exposedHeaders': ['sessionId'],
-  'origin': '*',
-  'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  'preflightContinue': false
-}));
+// app.use(cors({
+//   'allowedHeaders': ['sessionId', 'Content-Type'],
+//   'exposedHeaders': ['sessionId'],
+//   'origin': '*',
+//   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   'preflightContinue': false
+// }));
 
 const corsOptions = {
   origin: '*',
   optionsSuccessStatus: 204, // No content response for preflight requests
 };
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 const server = http.createServer(app); 
 const io = new SocketServer(server);
