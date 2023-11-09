@@ -38,14 +38,14 @@ import http from "http"
 const app = express();
 
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'https://worklink.vercel.app');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
 
 const corsOptions = {
-  origin: 'https://worklink.vercel.app',
+  origin: '*',
   optionsSuccessStatus: 204, // No content response for preflight requests
 };
 
