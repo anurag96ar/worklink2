@@ -37,7 +37,7 @@ import { initialSocket } from "./controllers/employer.js";
 
 const io = new SocketServer(3002, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'https://worklink.vercel.app/',
   },
 });
 
