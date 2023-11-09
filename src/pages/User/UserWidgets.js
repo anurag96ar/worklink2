@@ -28,9 +28,7 @@ import {
         try {
           
           const response = await instance.get(`/users/${userId}`);
-          // const response = await axios.get(`http://localhost:3001/users/${userId}`, {
-          //   headers: { Authorization: `Bearer ${token}` },
-          // });
+       
           console.log(response,"axios response");
           setUser(response.data);
         } catch (error) {

@@ -27,20 +27,19 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { setLogin } from "../../state/state";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import Headers from "../../components/Headers";
 import PostWidget from "../User/PostWidget";
 import { instance } from "../../services/axiosInterceptor";
 
-
 const UserDetails = () => {
-    const  state = useLocation();
+  const state = useLocation();
   const [user, setUser] = useState([]);
   const [image, setImage] = useState(null);
   const [posts, setPostData] = useState([]);
 
   const dispatch = useDispatch();
-  const { email } = useSelector((state) => state.user);
+  const  email  = useSelector((state) => state.user);
   // const { userId } = useParams();
   const token = useSelector((state) => state.token);
 
@@ -48,174 +47,149 @@ const UserDetails = () => {
   const { palette } = useTheme();
   const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
-  
-  const [userMail,setUserMail]=useState("")
-  const [userId,setUserId]=useState("")
 
+  const [userMail, setUserMail] = useState("");
+  const [userId, setUserId] = useState("");
 
- 
-    const getUser = async () => {
-      console.log(userMail);
-      const formData = new FormData();
-      formData.append("email",userMail );
-      console.log(formData);
-    const response = await instance.post(`/admin/usersdetails`,formData,
-    {
+  const getUser = async () => {
+   
+    const formData = new FormData();
+    formData.append("email", userMail);
+    console.log(formData);
+    const response = await instance.post(`/admin/usersdetails`, formData, {
       headers: {
-       
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-    },)
+    });
 
-      
-      setUser(response.data)
-      const res = await instance.post(`/admin/userspost`,formData,
-      {
-        headers: {
-         
-          'Content-Type': 'application/json'
-        },
-        
-      },)
-      console.log(res,"ressssss");
-     
-      setPostData(res.data)
+    setUser(response.data);
+    const res = await instance.post(`/admin/userspost`, formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(res, "ressssss");
 
+    setPostData(res.data);
+  };
 
-    };
-    
+  useEffect(() => {
+    const userEmail = localStorage.getItem("email");
+    setUserMail(userEmail);
+    console.log(userEmail,"my email");
+    const userId = localStorage.getItem("userId");
+    setUserId(userId);
 
-    useEffect(() => {
-      const userEmail= localStorage.getItem("email")
-      setUserMail(userEmail)
-      const userId= localStorage.getItem("userId")
-      setUserId(userId)
-      
-      
-      getUser();
-    }, [userMail,userId]); // eslint-disable-line react-hooks/exhaustive-deps
+    getUser();
+  }, [userMail, userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    console.log(userId,"this this this");
+  console.log(userId, "this this this");
   if (!user) return null;
 
-  function CallBack(data){
+  function CallBack(data) {
     getUser();
   }
 
-
-
-  
-
   return (
     <Box>
-      <Headers/>
+      <Headers />
       <Box paddingTop="20px"></Box>
-      {user.map((user)=>(
-
-      
-      <Box
-        width="100%"
-        padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
-        gap="2rem"
-        justifyContent="center"
-      >
-        {" "}
-        <Box width="40%" justifyContent="center" textAlign="-webkit-center">
-         
-          
-           <Box>
-                    
-                    <UserImage size="200px" image={user.picturePath} />
-                  
-                  </Box>
-         
-          <Typography
-            variant="h3"
-            color={dark}
-            fontWeight="500"
-            justifyContent="center"
-            padding="10px"
-          >
-            {user.firstName} {user.lastName}
-          </Typography>
-          <Typography color={medium}>{user.recentJob}</Typography>
-        </Box>
-        <Box flexBasis={isNonMobileScreens ? "100%" : undefined}>
-          <WidgetWrapper width="80%">
-            <Typography variant="h4" padding="10px">
-              {" "}
-              About
-            </Typography>
-            <Typography variant="h5" padding="10px">
-              {user.recentJob}
-            </Typography>
-            <Typography paddingLeft="10px" color={medium}>
-              {user.employementType}
-            </Typography>
-
-            <Box padding="10px" display={isNonMobileScreens ? "flex" : "block"}>
-              <Typography variant="h5">{user.location},India</Typography>
-
-              <Typography variant="h6" paddingLeft="10px" color="#088395">
-                Contact info
-              </Typography>
+      {user.map((user) => (
+        <Box
+          width="100%"
+          padding="2rem 6%"
+          display={isNonMobileScreens ? "flex" : "block"}
+          gap="2rem"
+          justifyContent="center"
+        >
+          {" "}
+          <Box width="40%" justifyContent="center" textAlign="-webkit-center">
+            <Box>
+              <UserImage size="200px" image={user.picturePath} />
             </Box>
-            <Typography color="#176B87" variant="h5" paddingLeft="10px">
-              {" "}
-              {user.friends.length} connections
-            </Typography>
-          </WidgetWrapper>
-          <Box m="2rem 0" />
-          <Box width="80%">
-       {posts.map(
-        ({
-          _id,
-          userId,
-          email,
-          firstName,
-          lastName,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments,
-          reportedBy,
-          isBlocked
-       
-        }) => (
-          <PostWidget
-          handleCallback ={CallBack}
-          isAdmin={true}
-          isProfile={false}
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            postEmail={email}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-            reportedBy={reportedBy}
-            isBlocked={isBlocked}
-          />
-        )
-      )}
-          </Box>
-         
-        </Box>
-      </Box>
-      ))}
-     
-       
-   
 
+            <Typography
+              variant="h3"
+              color={dark}
+              fontWeight="500"
+              justifyContent="center"
+              padding="10px"
+            >
+              {user.firstName} {user.lastName}
+            </Typography>
+            <Typography color={medium}>{user.recentJob}</Typography>
+          </Box>
+          <Box flexBasis={isNonMobileScreens ? "100%" : undefined}>
+            <WidgetWrapper width="80%">
+              <Typography variant="h4" padding="10px">
+                {" "}
+                About
+              </Typography>
+              <Typography variant="h5" padding="10px">
+                {user.recentJob}
+              </Typography>
+              <Typography paddingLeft="10px" color={medium}>
+                {user.employementType}
+              </Typography>
+
+              <Box
+                padding="10px"
+                display={isNonMobileScreens ? "flex" : "block"}
+              >
+                <Typography variant="h5">{user.location},India</Typography>
+
+                <Typography variant="h6" paddingLeft="10px" color="#088395">
+                  Contact info
+                </Typography>
+              </Box>
+              <Typography color="#176B87" variant="h5" paddingLeft="10px">
+                {" "}
+                {user.friends.length} connections
+              </Typography>
+            </WidgetWrapper>
+            <Box m="2rem 0" />
+            <Box width="80%">
+              {posts.map(
+                ({
+                  _id,
+                  userId,
+                  email,
+                  firstName,
+                  lastName,
+                  description,
+                  location,
+                  picturePath,
+                  userPicturePath,
+                  likes,
+                  comments,
+                  reportedBy,
+                  isBlocked,
+                }) => (
+                  <PostWidget
+                    handleCallback={CallBack}
+                    isAdmin={true}
+                    isProfile={false}
+                    key={_id}
+                    postId={_id}
+                    postUserId={userId}
+                    postEmail={email}
+                    name={`${firstName} ${lastName}`}
+                    description={description}
+                    location={location}
+                    picturePath={picturePath}
+                    userPicturePath={userPicturePath}
+                    likes={likes}
+                    comments={comments}
+                    reportedBy={reportedBy}
+                    isBlocked={isBlocked}
+                  />
+                )
+              )}
+            </Box>
+          </Box>
+        </Box>
+      ))}
     </Box>
-    
   );
 };
 

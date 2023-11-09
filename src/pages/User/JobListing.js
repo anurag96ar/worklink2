@@ -90,6 +90,34 @@ function JobListing() {
     }
   };
 
+  const checkApplyJob = async () => {
+    const formData = new FormData();
+    formData.append("appliedBy", email);
+      formData.append("jobId", jobId);
+      console.log(jobId,email, "my data is here");
+
+    try {
+      const response = await instance.post(
+        "/users/checkapplied",
+        
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const checkJobsApplied = response.data;
+      console.log(checkJobsApplied,"Check Applied data");
+     
+    } catch (error) {
+      // Handle errors here
+      console.error("Error uploading post:", error);
+    }
+  };
+
+
   return (
     <div>
       <Navbar />
@@ -164,6 +192,7 @@ function JobListing() {
                               setLocation(jobs.location)
                               setJobId(jobs._id)
                               setJobTitle(jobs.jobTitle)
+                              checkApplyJob()
                               handleSub()}}
                             variant="primary"
                             className="text-indigo-600 hover-text-indigo-900 dark:text-indigo-400 dark:hover-text-indigo-600 mx-3" // Increased margin

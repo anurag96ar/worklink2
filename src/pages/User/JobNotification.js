@@ -110,8 +110,9 @@ const JobNotification = () => {
             Apply
           </Button>
         </WidgetWrapper>
-        <ToastContainer/>
+        
       </Box>
+      <ToastContainer/>
     </Box>
   );
 };

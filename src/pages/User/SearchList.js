@@ -58,7 +58,7 @@ function SearchList() {
     const formData = new FormData();
         formData.append("requestTo", data);
         formData.append("requestFrom",email );
-        console.log(formData);
+       
       
         try {
           const response = await instance.post("/users/connect", formData, {

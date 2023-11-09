@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UserImage from "../../components/UserImage";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { io } from "socket.io-client";
+import  io  from "socket.io-client";
 
 import { useLocation } from 'react-router-dom';
 import { instance } from "../../services/axiosInterceptor";
@@ -30,7 +30,6 @@ const Dashboard = () => {
   const state = useLocation();
   useEffect(() => {
 
-    console.log(state.state, "jayaaaaaa");
     if (state.state != null) {
 
       const fetchMyConverstaion = async () => {
@@ -70,7 +69,17 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    setSocket(io("http://localhost:3002"));
+    setSocket(io("http://localhost:3001", {
+      reconnectionDelay: 1000,
+      reconnection: true,
+      reconnectionAttemps: 10,
+      transports: ['websocket'],
+      agent: false,
+      upgrade: false,
+      rejectUnauthorized: false
+  }
+    ));
+   
   }, []);
 
   useEffect(() => {

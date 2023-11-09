@@ -22,7 +22,15 @@ import { Dashboard } from '@mui/icons-material';
 
 
 
- const socket = io("http://localhost:3002")
+ const socket = io("http://localhost:3001", {
+  reconnectionDelay: 1000,
+  reconnection: true,
+  reconnectionAttemps: 10,
+  transports: ['websocket'],
+  agent: false,
+  upgrade: false,
+  rejectUnauthorized: false
+})
   useEffect(()=>{
    socket.emit("join-room", email)
    socket.on("test",(data)=>{
