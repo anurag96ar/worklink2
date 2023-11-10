@@ -34,7 +34,7 @@ import { Server as SocketServer } from 'socket.io';
 import { initialiseSocket } from "./controllers/users.js";
 import { initialSocket } from "./controllers/employer.js";
 import http from "http"
-var httpProxy = require('http-proxy');
+import  httpProxy from 'http-proxy';
 var proxy = httpProxy.createProxyServer({});
 const app = express();
 
