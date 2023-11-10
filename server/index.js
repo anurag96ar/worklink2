@@ -35,6 +35,8 @@ import { initialiseSocket } from "./controllers/users.js";
 import { initialSocket } from "./controllers/employer.js";
 
 
+app.use(cors());
+
 const io = new SocketServer(3002, {
   cors: {
     origin: 'https://worklink.vercel.app',
