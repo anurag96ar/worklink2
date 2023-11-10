@@ -33,72 +33,20 @@ import { blockPost } from "./controllers/adminCtrl.js";
 import { Server as SocketServer } from 'socket.io';
 import { initialiseSocket } from "./controllers/users.js";
 import { initialSocket } from "./controllers/employer.js";
-import http from "http"
-import  httpProxy from 'http-proxy';
-var proxy = httpProxy.createProxyServer({});
-const app = express();
-
-// app.use(function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   next();
-// });
 
 
-
-
-const allowedOrigins = ["http://worklink.vercel.app"]
-
-
-app.use(function(req, res, next) {
-  proxy.web(req, res, { target: 'https://worklink.vercel.app' })
-  next();
-});
-
-
-// Apply CORS middleware
-app.use(cors({
-  origin: 'http://worklink.vercel.app',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
-}));
-
-const server = http.createServer(app);
-const io = new SocketServer(server, {
+const io = new SocketServer(3002, {
   cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"], 
-    allowedHeaders: ["Origin", "Content-Type", "Accept"],
-    credentials: true
+    origin: 'https://worklink.vercel.app',
   },
 });
 
-// const corsOptions = {
-//   origin: 'http://localhost:3000', // or your frontend URL
-//   credentials: true,
-// };
-
-// Enable All CORS Requests
-// app.use(cors({
-//   origin: 'http://localhost:3000/', // Allow requests only from this origin
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   credentials: true,
-//   optionsSuccessStatus: 204,
-// }));
-
-// const io = new SocketServer(3002, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//   },
-// });
 
 
 
 let users = [];
 io.on('connection', socket => {
-    console.log('User connected', socket.id);
+   // console.log('User connected', socket.id);
     socket.on('addUser', userId => {
 
         const isUserExist = users.find(user => user.userId === userId);
@@ -126,15 +74,15 @@ io.on('connection', socket => {
 
 
     socket.on('sendMessage', async ({ senderId, receiverId, message, conversationId }) => {
-      console.log(users,"userIO");
+   
         const receiver = users.find(user => user.userId === receiverId);
-        console.log(receiver,"receiverData");
+      //  console.log(receiver,"receiverData");
         const sender = users.find(user => user.userId === senderId);
-        console.log(sender,"senderData");
+      //  console.log(sender,"senderData");
 
         const user = await User.findById(senderId);
-        console.log(user,"userData data");
-        console.log('sender :>> ', sender, receiver);
+       // console.log(user,"userData data");
+       // console.log('sender :>> ', sender, receiver);
         if (receiver) {
             io.to(receiver.socketId).to(sender.socketId).emit('getMessage', {
                 senderId,
@@ -169,16 +117,15 @@ initialSocket(io)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
-
+const app = express();
 app.use(express.json());
-
-// app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-
+app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
@@ -189,15 +136,12 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
-
-
 const upload = multer({ storage });
 
-
 /* ROUTES WITH FILES */
-
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/employer/createJob",  jobCreation);
+
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.post("/searchList", verifyToken, getUsersList);
 app.post("/getPost", getFeedPosts);
@@ -228,24 +172,14 @@ app.use("/users", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/employer", employerRoutes);
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://worklink.vercel.app');
-  // You can also specify more headers as needed
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
-
-const PORT = process.env.PORT 
-
-
+const PORT = process.env.PORT || 6001;
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    server.listen(PORT, () =>  {});
+    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
     /* ADD DATA ONE TIME */
     // User.insertMany(users);
