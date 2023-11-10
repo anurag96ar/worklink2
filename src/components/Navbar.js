@@ -62,7 +62,7 @@ const Navbar = () => {
   const onChange = (event) => {
     setSearchData(event.target.value);
   };
-  const socket = io("https://worklink.tech", {
+  const socket = io("http://localhost:3002", {
     reconnectionDelay: 1000,
     reconnection: true,
     reconnectionAttemps: 10,
