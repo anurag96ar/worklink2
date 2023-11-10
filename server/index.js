@@ -46,20 +46,14 @@ const app = express();
 const allowedOrigins = ["https://worklink.vercel.app"]
 
 app.options("*", cors());
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    methods: 'GET,POST,OPTIONS',
-    allowedHeaders: 'Origin,Content-Type,Accept'
-  })
-);
+
+// Apply CORS middleware
+app.use(cors({
+  origin: 'https://worklink.vercel.app',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+}));
 
 const server = http.createServer(app);
 const io = new SocketServer(server, {
@@ -70,6 +64,8 @@ const io = new SocketServer(server, {
     credentials: true
   },
 });
+
+
 
 
 
