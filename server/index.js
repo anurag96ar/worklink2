@@ -37,7 +37,7 @@ import { initialSocket } from "./controllers/employer.js";
 
 const io = new SocketServer(3002, {
   cors: {
-    origin: 'https://worklink.vercel.app/',
+    origin: '*',
   },
 });
 
@@ -124,7 +124,9 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(cors( {
+    origin: '*',
+  }));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
