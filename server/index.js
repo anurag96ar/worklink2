@@ -153,6 +153,10 @@ app.patch("/:id/comment", commentPost);
 app.patch("/:id/report", reportPost);
 app.post("/blockPost/:id", blockPost);
 
+app.get("/",(req,res)=>{
+  res.send("hellooo")
+})
+
 
 app.post("/title/:id", verifyToken, editTilte);
 app.delete("/deletePost/:id", verifyToken, deletepost);
