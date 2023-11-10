@@ -48,10 +48,10 @@ const allowedOrigins = ["https://worklink.vercel.app"]
 app.options("*", cors());
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://worklink.vercel.app');
+  res.setHeader('Access-Control-Allow-Origin', 'https://worklink.vercel.app');
   // You can also specify more headers as needed
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
 
