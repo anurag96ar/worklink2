@@ -47,14 +47,14 @@ const app = express();
 
 
 
-const allowedOrigins = ["https://worklink.vercel.app"]
+const allowedOrigins = ["http://worklink.vercel.app"]
 
 
 
 
 // Apply CORS middleware
 app.use(cors({
-  origin: 'https://worklink.vercel.app',
+  origin: 'http://worklink.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
@@ -69,7 +69,6 @@ const io = new SocketServer(server, {
     credentials: true
   },
 });
-
 
 // const corsOptions = {
 //   origin: 'http://localhost:3000', // or your frontend URL
