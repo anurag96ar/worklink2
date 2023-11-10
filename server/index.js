@@ -51,6 +51,10 @@ const app = express();
 const allowedOrigins = ["http://worklink.vercel.app"]
 
 
+app.use(function(req, res, next) {
+  proxy.web(req, res, { target: 'https://worklink.vercel.app' })
+  next();
+});
 
 
 // Apply CORS middleware
@@ -241,7 +245,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    server.listen(PORT, () =>   proxy.web(req, res, { target: 'https://worklink.vercel.app' }));
+    server.listen(PORT, () =>  {});
 
     /* ADD DATA ONE TIME */
     // User.insertMany(users);
