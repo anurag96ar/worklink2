@@ -100,9 +100,8 @@ export const register = async (req, res) => {
   /* LOGGING IN */
 export const login = async (req, res) => {
     try {
-       res.set('Access-Control-Allow-Origin', '*');
-   res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-   res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      
+      
       const { email, password } = req.body;
       const user = await User.findOne({ email: email, blockStatus:false });
       if (!user) return res.status(400).json({ msg: "User does not exist. " });
