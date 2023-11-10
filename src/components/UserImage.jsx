@@ -3,7 +3,7 @@ const UserImage = ({ image, size = 60 }) => {
   return (
 
     <img
-      src={`http://worklink.tech/assets/${image}`}
+      src={`https://worklink.tech/assets/${image}`}
       width={size}
 
       className="border border-primary p-[2px] rounded-full"
