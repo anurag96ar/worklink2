@@ -34,7 +34,8 @@ import { Server as SocketServer } from 'socket.io';
 import { initialiseSocket } from "./controllers/users.js";
 import { initialSocket } from "./controllers/employer.js";
 import http from "http"
-
+var httpProxy = require('http-proxy');
+var proxy = httpProxy.createProxyServer({});
 const app = express();
 
 // app.use(function(req, res, next) {
@@ -240,7 +241,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    server.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    server.listen(PORT, () =>   proxy.web(req, res, { target: 'https://worklink.vercel.app' }));
 
     /* ADD DATA ONE TIME */
     // User.insertMany(users);
