@@ -33,7 +33,7 @@ function Login() {
   
     try {
       const response = await instance.post("/auth/login", formData,{
-        withCredentials: true,
+        
         headers: {
           "Content-Type": "application/json", 
 
