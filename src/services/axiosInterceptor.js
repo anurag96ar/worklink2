@@ -7,11 +7,8 @@ export const instance = axios.create({
     baseURL: 'https://worklink.tech' // Replace with your actual base URL
   });
 
-  
 export const createAxiosInstance = (params) => {
    
-
-
 instance.interceptors.request.use(
   (config) => {
     const accessToken = params.accessToken
