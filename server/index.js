@@ -45,25 +45,25 @@ const app = express();
 // });
 
 app.options("*", cors());
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    methods: 'GET,POST,OPTIONS',
-    allowedHeaders: 'Origin,Content-Type,Accept'
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true,
+//     methods: 'GET,POST,OPTIONS',
+//     allowedHeaders: 'Origin,Content-Type,Accept'
+//   })
+// );
 
 const server = http.createServer(app);
 const io = new SocketServer(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: '*',
     methods: ["GET", "POST"], 
     allowedHeaders: ["Origin", "Content-Type", "Accept"],
     credentials: true
