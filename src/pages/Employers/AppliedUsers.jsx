@@ -11,6 +11,7 @@ function AppliedUsers() {
   const navigate = useNavigate();
   const [userMail, setUserMail] = useState("");
   const [jobId,setJobId] = useState()
+  
 
   localStorage.getItem("email",userMail)
 
@@ -39,6 +40,8 @@ useEffect(() => {
     setJobId(jobId)
     getAppliedUser();
   }, [userMail,jobId]);
+
+  
 
   
 
@@ -77,6 +80,9 @@ useEffect(() => {
                         
                         <td>
                           <Button
+                          onClick={()=>{
+                            localStorage.setItem("userEmail",jobs.appliedBy);
+                             navigate("/empuserdetails");}}
                             variant="primary"
                             className="text-indigo-600 hover-text-indigo-900 dark:text-indigo-400 dark:hover-text-indigo-600 mx-3"
                           >

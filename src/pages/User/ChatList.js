@@ -70,7 +70,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    setSocket(io("https://worklink.tech"));
+    setSocket(io("http://localhost:3001"));
   }, []);
 
   useEffect(() => {

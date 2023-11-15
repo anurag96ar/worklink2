@@ -62,7 +62,7 @@ const Navbar = () => {
   const onChange = (event) => {
     setSearchData(event.target.value);
   };
-  const socket = io("https://worklink.tech");
+  const socket = io("http://localhost:3001");
 
   useEffect(() => {
     socket.emit("join-room", email);
@@ -117,6 +117,7 @@ const Navbar = () => {
      
 
     navigate("/jobapply")
+    window.location.reload();
    
   };
 

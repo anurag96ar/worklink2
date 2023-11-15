@@ -36,6 +36,7 @@ import JobListing from "./pages/User/JobListing";
 import ChatList from "./pages/User/ChatList";
 import AppliedUsers from "./pages/Employers/AppliedUsers";
 import JobNotification from "./pages/User/JobNotification";
+import EmpUserDetails from "./pages/Employers/EmpUserDetails";
 
 import {createAxiosInstance} from "./services/axiosInterceptor";
 
@@ -59,7 +60,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter >
         <ThemeProvider theme={theme}>
           <Routes>
             <Route path="/" element={<Login />} />
@@ -82,6 +83,7 @@ function App() {
             <Route path="/employerJob" element={<EmpJobCreation/>} />
             <Route path="/empJobsList" element={<EmpJobListing/>} />
             <Route path="/appliedList" element={<AppliedUsers/>} />
+            <Route path="/empuserdetails" element={<EmpUserDetails/>} />
 
 
             <Route

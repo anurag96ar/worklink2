@@ -10,7 +10,6 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { instance } from "../../services/axiosInterceptor";
 
-
 function JobListing() {
   const [jobData, setJobData] = useState([]);
   const [modal, setModal] = useState(false);
@@ -21,19 +20,20 @@ function JobListing() {
   const navigate = useNavigate();
   const [userMail, setUserMail] = useState("");
   const token = useSelector((state) => state.token);
-  const [jobDescription,setJobDescription] = useState("")
-  const [location,setLocation]= useState("")
-  const [salary,setSalary]= useState("")
-  const [jobId,setJobId]=useState("")
-  const [jobTitle,setJobTitle] = useState("")
+  const [jobDescription, setJobDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [salary, setSalary] = useState("");
+  const [jobId, setJobId] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
   const { email } = useSelector((state) => state.user);
 
+  const [showApply, setShowApply] = useState(true);
 
-  const handleSub = async () => {
+  const handleSub = async (data) => {
     setModal(true);
     setShow(true);
+    checkAppliedJob(data)
   };
-
 
   useEffect(() => {
     const userEmail = localStorage.getItem("email");
@@ -64,14 +64,13 @@ function JobListing() {
   const applyJob = async () => {
     const formData = new FormData();
     formData.append("appliedBy", email);
-      formData.append("jobId", jobId);
-      formData.append("jobTitle", jobTitle);
-   
+    formData.append("jobId", jobId);
+    formData.append("jobTitle", jobTitle);
 
     try {
       const response = await instance.post(
         "/users/applyJob",
-        
+
         formData,
         {
           headers: {
@@ -79,11 +78,53 @@ function JobListing() {
           },
         }
       );
+
       const jobsApplied = response.data;
-      console.log(jobsApplied,"Applied data");
-     
+
+      console.log(jobsApplied, "Applied data");
+
       toast.success("Job Applied successfully");
-      handleClose()
+      handleClose();
+    } catch (error) {
+      // Handle errors here
+      console.error("Error uploading post:", error);
+    }
+  };
+
+  const checkAppliedJob = async (data) => {
+    const formData = new FormData();
+    formData.append("appliedBy", email);
+    formData.append("jobId", data);
+
+    console.log(data, "and", email);
+
+    try {
+      const response = await instance.post(
+        "/users/checkapplied",
+
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const checkApplied = response.data;
+      if (checkApplied.length > 0) {
+        
+        setShowApply(false);
+        console.log(showApply,"show apply value");
+       
+
+      }
+      else{
+        console.log(showApply,"show apply value in else");
+       
+      }
+      
+
+      console.log(checkApplied, "Applied data");
     } catch (error) {
       // Handle errors here
       console.error("Error uploading post:", error);
@@ -110,32 +151,38 @@ function JobListing() {
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg">
-              {modal && (
-                            <Modal
-                              style={{ paddingTop: "100px" }}
-                              show={show}
-                              onHide={handleClose}
-                              animation={false}
-                            >
-                              <Modal.Header closeButton>
-                                <Modal.Title>Job Description</Modal.Title>
-                              </Modal.Header>
-                              <Modal.Body>{jobDescription}</Modal.Body>
-                              <Modal.Body>Salary: {salary}</Modal.Body>
-                              <Modal.Body>Location: {location}</Modal.Body>
-                              <Modal.Footer>
-                                <Button
-                                  variant="secondary"
-                                  onClick={handleClose}
-                                >
-                                  Close
-                                </Button>
-                                <Button  variant="primary" onClick={()=>{applyJob()}}>
-                                  Apply
-                                </Button>
-                              </Modal.Footer>
-                            </Modal>
-                          )}
+                {modal && (
+                  <Modal
+                    style={{ paddingTop: "100px" }}
+                    show={show}
+                    onHide={handleClose}
+                    animation={false}
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>Job Description</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>{jobDescription}</Modal.Body>
+                    <Modal.Body>Salary: {salary}</Modal.Body>
+                    <Modal.Body>Location: {location}</Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          if (showApply) {
+                            applyJob();
+                          }
+
+                        }}
+                        disabled={!showApply}
+                      >
+                        {!showApply ? "Job Applied" : "Apply"}
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                )}
                 <Table responsive striped bordered hover>
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
@@ -156,19 +203,21 @@ function JobListing() {
                           {new Date(jobs.createdAt).toLocaleString()}
                         </td>
                         <td>
-                        
                           <Button
-                            onClick={()=>{
-                              setJobDescription(jobs.jobDescription)
-                              setSalary(jobs.salary)
-                              setLocation(jobs.location)
-                              setJobId(jobs._id)
-                              setJobTitle(jobs.jobTitle)
-                              handleSub()}}
+                            onClick={async () => {
+                              setJobDescription(jobs.jobDescription);
+                              setSalary(jobs.salary);
+                              setLocation(jobs.location);
+                            await   setJobId(jobs._id); 
+                              setJobTitle(jobs.jobTitle);
+                              setShowApply(true);
+                              console.log(jobId, "My job id");
+                              handleSub(jobs._id);
+                            }}
                             variant="primary"
                             className="text-indigo-600 hover-text-indigo-900 dark:text-indigo-400 dark:hover-text-indigo-600 mx-3" // Increased margin
                           >
-                            View Details
+                         {jobs._id}   View Details
                           </Button>
                         </td>
                       </tr>
@@ -180,7 +229,7 @@ function JobListing() {
           </div>
         </div>
       </section>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

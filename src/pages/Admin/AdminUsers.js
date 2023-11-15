@@ -58,7 +58,6 @@ const AdminUsers = () => {
   
     localStorage.setItem("email",email)
     localStorage.setItem("userId",userId)
-    
     navigate(`/admin/userdetails`)
   };
 

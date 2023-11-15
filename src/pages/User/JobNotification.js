@@ -20,8 +20,10 @@ const JobNotification = () => {
   const [jobTitle, setJobTitle] = useState("");
   const { email } = useSelector((state) => state.user);
   const [jobData,setJobData] =useState()
+  const [showApply, setShowApply] = useState(true);
+
   const myJobid = localStorage.getItem("jobId");
- 
+
 
   const getJobDetails = async () =>{
     const formData = new FormData();
@@ -39,7 +41,7 @@ const JobNotification = () => {
       setJobDescription(response.data.jobDescription)
       setLocation(response.data.location)
 
-      
+      checkAppliedJob(myJobid)
   }
 
   useEffect(()=>{
@@ -49,7 +51,7 @@ const JobNotification = () => {
   const applyJob = async () => {
     const formData = new FormData();
     formData.append("appliedBy", email);
-    formData.append("jobId", jobId);
+    formData.append("jobId", myJobid);
     formData.append("jobTitle", jobTitle);
 
     try {
@@ -66,12 +68,55 @@ const JobNotification = () => {
       const jobsApplied = response.data;
 
       toast.success("Job Applied successfully");
-      navigate("/feeds")
+      // navigate("/feeds")
+      setShowApply(false)
+      
     } catch (error) {
       // Handle errors here
       console.error("Error uploading post:", error);
     }
   };
+
+  const checkAppliedJob = async (data) => {
+    const formData = new FormData();
+    formData.append("appliedBy", email);
+    formData.append("jobId", data);
+
+    console.log(data, "and", email);
+
+    try {
+      const response = await instance.post(
+        "/users/checkapplied",
+
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const checkApplied = response.data;
+      if (checkApplied.length > 0) {
+        
+        setShowApply(false);
+        console.log(showApply,"show apply value");
+       
+
+      }
+      else{
+        console.log(showApply,"show apply value in else");
+       
+      }
+      
+
+      console.log(checkApplied, "Applied data");
+    } catch (error) {
+      // Handle errors here
+      console.error("Error uploading post:", error);
+    }
+  };
+
   return (
     <Box>
       <Navbar />
@@ -101,14 +146,17 @@ const JobNotification = () => {
           </Box>
 
           <Button
-            onClick={() => {
-              applyJob();
-            }}
-            variant="primary"
-            className="text-indigo-600 hover-text-indigo-900 dark:text-indigo-400 dark:hover-text-indigo-600 mx-3" // Increased margin
-          >
-            Apply
-          </Button>
+                        variant="primary"
+                        onClick={() => {
+                          if (showApply) {
+                            applyJob();
+                          }
+
+                        }}
+                        disabled={!showApply}
+                      >
+                        {!showApply ? "Job Applied" : "Apply"}
+                      </Button>
         </WidgetWrapper>
         <ToastContainer/>
       </Box>
