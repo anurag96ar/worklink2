@@ -486,9 +486,11 @@ export const getMyConversation = async (req, res) => {
 
 export const checkAppliedJob = async (req,res)=>{
 
-  const {email, jobId}= req.body
+  const {appliedBy, jobId}= req.body
 
-  const appliedJob = await JobModel.find({appliedBy:email,jobId:jobId})
+  console.log(appliedBy, "and" ,jobId, "Here it is");
+
+  const appliedJob = await JobModel.find({appliedBy:appliedBy,jobId:jobId})
 
   console.log(appliedJob,"Applied details");
 

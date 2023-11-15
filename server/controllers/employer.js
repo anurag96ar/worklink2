@@ -101,10 +101,10 @@ export const empLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     const emp = await Employer.findOne({ email: email, blockStatus: false, isApproved: true });
-    if (!emp) return res.status(400).json({ msg: "Employer does not exist. " });
+    if (!emp) return res.status(400).json({ message: "Employer does not exist. " });
 
     const isMatch = await bcrypt.compare(password, emp.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials. " });
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials. " });
 
     const token = jwt.sign({ id: emp._id }, process.env.JWT_SECRET);
     delete emp.password;

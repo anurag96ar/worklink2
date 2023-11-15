@@ -3,7 +3,7 @@ import {adminLogin,getUsersList,getEmployerList,blockUser,unblockUser,blockUserE
 import { adminVerification } from '../middleware/auth.js';
 const router = express.Router();
  
-router.post("/login",adminVerification,adminLogin)
+router.post("/login",adminLogin)
 router.get("/userslist",getUsersList)
 router.get("/employerlist",getEmployerList)
 router.put("/blockUser/:id",blockUser)
