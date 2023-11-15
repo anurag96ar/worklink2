@@ -40,7 +40,7 @@ export const getUsersList=async(req,res)=>{
 }
 
 export const unblockUser=async(req,res)=>{
-console.log("ublock unblock");
+
   const user=await User.findByIdAndUpdate(req.params.id);
   user.blockStatus=false;
   await user.save();
@@ -103,10 +103,9 @@ export const unblockEmp=async(req,res)=>{
 
   export const getUserPost = async (req, res) => {
     try {
-      console.log("Hetetettetetetettetetettetetet");
+  
       const { email } = req.body;
-      console.log(req.body);
-      console.log(email,"nnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+     
       const user = await Post.find({email:email});
       console.log(user,"post pots post");
       res.status(200).json(user);

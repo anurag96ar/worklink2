@@ -7,9 +7,11 @@ import {
     appliedUser,getJobAppliedCount
 } from "../controllers/employer.js"
 
+import { empVerification } from "../middleware/auth.js";
+
 const router = express.Router();
  
-router.post("/emplogin",empLogin)
+router.post("/emplogin",empVerification,empLogin)
 router.post("/otp",empVerifyOtp)
 router.post("/joblist",getJobsList)
 router.post("/applied",appliedUser)

@@ -1,9 +1,9 @@
 import express from 'express';
 import {adminLogin,getUsersList,getEmployerList,blockUser,unblockUser,blockUserEmp,unblockEmp,approveEmp,getUserDetails, getUserPost, blockPost,appliedJobs,blockedEmployee,blockedPost} from '../controllers/adminCtrl.js'
-
+import { adminVerification } from '../middleware/auth.js';
 const router = express.Router();
  
-router.post("/login",adminLogin)
+router.post("/login",adminVerification,adminLogin)
 router.get("/userslist",getUsersList)
 router.get("/employerlist",getEmployerList)
 router.put("/blockUser/:id",blockUser)

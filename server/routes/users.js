@@ -25,22 +25,22 @@ import {
     getJobDetails,getMyConversation, checkAppliedJob
 } from "../controllers/users.js"
 
-import { verifyToken } from "../middleware/auth.js";
+import { userVerification } from "../middleware/auth.js";
 import { jobCreation } from "../controllers/employer.js";
 
 const router = express.Router();
 
 /* READ */
-router.get("/:id", verifyToken, getUser);
-router.post("/profile/:id", verifyToken, editUserDetails);
+router.get("/:id", userVerification, getUser);
+router.post("/profile/:id", userVerification, editUserDetails);
 
-router.get("/friend/:email", verifyToken, getFriendProfile);
+router.get("/friend/:email", userVerification, getFriendProfile);
 
-router.get("/:id/friends", verifyToken, getUserFriends);
+router.get("/:id/friends", userVerification, getUserFriends);
 
 
 /* UPDATE */
-router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+router.patch("/:id/:friendId", userVerification, addRemoveFriend);
 router.post("/connect",connections)
 router.post("/myRequest",getConnectionList)
 router.post("/accept",acceptRequest)
