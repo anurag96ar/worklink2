@@ -33,7 +33,7 @@ const store = configureStore({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+ 
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistStore(store)}>
         <GoogleOAuthProvider clientId="497574675827-rf9a5agp6k0v70kdlhbln606g1nasid5.apps.googleusercontent.com">
@@ -41,5 +41,5 @@ root.render(
         </GoogleOAuthProvider>
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+ 
 );

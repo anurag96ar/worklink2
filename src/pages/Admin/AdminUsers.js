@@ -10,7 +10,6 @@ const AdminUsers = () => {
   const navigate = useNavigate();
   const [userMail,setUserMail]=useState("")
   
-console.log(userMail,"YYYYYYYYYYYYYYYYYYYYYYY");
   useEffect(() => {
     const userEmail= localStorage.getItem("email")
     setUserMail(userEmail)
@@ -35,8 +34,7 @@ console.log(userMail,"YYYYYYYYYYYYYYYYYYYYYYY");
 
   const handleBlock = async (id) => {
     const res = await instance.put(`/admin/blockUser/${id}`);
-    console.log(id);
-    console.log(res, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+   
 
     const updatedUser = userData.map((i) =>
       i._id === id ? { ...i, blockStatus: true } : i

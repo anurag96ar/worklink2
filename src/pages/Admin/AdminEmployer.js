@@ -83,7 +83,7 @@ const res = await instance.put(`/admin/blockEmp/${id}`);
                 <Table responsive striped bordered hover>
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                      <th>Email Id</th>
+                      <th>Employer</th>
                       <th>Location</th>
                       <th>Joining Date</th>
                       <th>Actions</th>
@@ -93,7 +93,7 @@ const res = await instance.put(`/admin/blockEmp/${id}`);
                   <tbody className="bg-white dark:bg-gray-900">
                     {empData.map((emp) => (
                       <tr key={emp._id}>
-                        <td>{emp.email}</td>
+                        <td>{emp.companyName}</td>
                         <td className="text-green-500 dark:text-green-400">
                           {emp.location}
                         </td>
@@ -101,12 +101,12 @@ const res = await instance.put(`/admin/blockEmp/${id}`);
                           {new Date(emp.createdAt).toLocaleString()}
                         </td>
                         <td>
-                          <Button
+                          {/* <Button
                             variant="primary"
                             className="text-indigo-600 hover-text-indigo-900 dark:text-indigo-400 dark:hover-text-indigo-600 mx-3" // Increased margin
                           >
                             View Details
-                          </Button>
+                          </Button> */}
                           {emp.blockStatus ? (
                             <Button
                               variant="success"

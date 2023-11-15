@@ -54,10 +54,11 @@ function Login() {
     } catch (error) {
       // Handle request error
       console.error("Request error:", error);
+     
+      
     }
   };
   
-
   const handleGoogleLogin = async (credentialResponseDecoded) => {
     console.log("inside handle google login");
     console.log(credentialResponseDecoded.email);
