@@ -217,7 +217,7 @@ function JobListing() {
                             variant="primary"
                             className="text-indigo-600 hover-text-indigo-900 dark:text-indigo-400 dark:hover-text-indigo-600 mx-3" // Increased margin
                           >
-                         {jobs._id}   View Details
+                          View Details
                           </Button>
                         </td>
                       </tr>
